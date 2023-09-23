@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<link th:href="@{/css/headfoot.css}" rel="stylesheet" type="text/css">
+<title>들어온 지점정보 수정요청 목록</title>
+</head>
+<body>
+	<header>
+		<div th:replace="~{inc/superHeader :: headerMenu}"></div>
+	</header>
+<h2>지점정보 수정요청 목록</h2>
+	<block th:if="${modiBranchList.isEmpty()}">
+		<img src="/images/텅.jpg" /><br/>
+	</block>
+	<block th:unless="${modiBranchList.isEmpty()}">
+		<table border="">
+	
+			<tr>
+				<th>변경할 지점</th>
+				<th>변경된 전화번호</th>
+				<th colspan="2">처리</th>
+			</tr>
+			<tr th:each="modiBranch : ${modiBranchList}">
+				
+				<td>[[${modiBranch.originbranchname}]]</td>
+				<td>[[${modiBranch.phone}]]</td>
+				<td><a th:href="@{/super/modiBranchOK(BranchId=${modiBranch.originbranchId})}">수락</a></td>
+				<td><a th:href="@{/super/modiBranchNO(BranchId=${modiBranch.originbranchId})}">거부</a></td>
+			</tr>
+	
+		</table>
+	</block>
+		<a th:href="@{/super}"><button>돌아가기</button></a>
+</body>
+</html>

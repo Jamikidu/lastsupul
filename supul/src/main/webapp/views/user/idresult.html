@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<link th:href="@{/css/headfoot.css}" rel="stylesheet" type="text/css">
+
+	<meta charset="UTF-8">
+	<title>아이디 찾기 결과</title>
+</head>
+
+<body>
+	<header>
+		<div th:replace="~{inc/header :: headerMenu}"></div>
+	</header>
+	<h2>아이디 찾기 결과</h2>
+	<div th:if="${foundId}">
+		<p>당신의 아이디는: <span th:text="${foundId.userId}"></span> 입니다.</p>
+	</div>
+	<div th:if="${error}">
+		<p th:text="${error}"></p>
+	</div>
+</body>
+
+</html>

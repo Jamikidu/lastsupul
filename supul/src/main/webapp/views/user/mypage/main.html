@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+   <meta charset="UTF-8">
+   <title>마이페이지</title>
+   <link th:href="@{/css/headfoot.css}" rel="stylesheet" type="text/css">
+
+</head>
+
+<body>
+   <header>
+      <div th:replace="~{inc/header :: headerMenu}"></div>
+   </header>
+   <h1>마이페이지</h1>
+   <table border="">
+      <tr>
+         <td colspan="2">헤더위치</td>
+      </tr>
+      <tr>
+         <td>
+            <ul>
+               <li><a href="/user/mypage/modiPw">내 정보 수정</a></li>
+               <!-- 정현 수정 -->
+               <li><a href="/user/mypage/couponList">내 쿠폰 목록</a></li>
+              
+               <!-- 정현 수정 -->
+               <li><a href="/user/mypage/wishlist">테마 찜목록</a></li>
+               <li><a href="/user/mypage/rvList">예약 내역</a></li>
+               <li><a href="/user/mypage/writeList">내가 작성한 글 목록</a></li>
+               <li><a href="/user/mypage/rankList/전체/전체">내 랭킹확인</a></li>
+               <li><a href="/user/delete">회원 탈퇴</a></li>
+            </ul>
+         </td>
+         <td>내용물</td>
+      </tr>
+      <tr>
+         <td colspan="2">푸터 위치</td>
+      </tr>
+   </table>
+</body>
+
+</html>

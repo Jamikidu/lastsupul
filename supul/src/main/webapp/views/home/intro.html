@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>homeIntro</title>
+<link th:href="@{/css/headfoot.css}" rel="stylesheet" type="text/css">
+
+</head>
+<body>
+    <header>
+		 <block th:if="${userRole==null}">
+       <div th:replace="inc/header :: headerMenu"></div>
+       	</block>
+       <block th:if="${userRole!=null}">
+			<div th:replace="~{inc/superHeader :: headerMenu}"></div>
+		</block>
+   </header>
+   
+   
+<h1>홈페이지 소개</h1>
+
+
+<div th:each="intro : ${homepageIntroList}">
+    <h1 th:text="${intro.title1}"></h1>
+    
+    <hr/>
+    
+    <h1 th:text="${intro.title2}"></h1>
+    <h3 th:text="${intro.content1}"></h3>
+    
+    <hr/>
+    
+    <h2 th:text="${intro.title3}"></h2>
+    <h3 th:text="${intro.subtitle1}"></h3>
+    <br/>
+    <h3 th:text="${intro.content2}"></h3>
+    <h3 th:text="${intro.content3}"></h3>
+    <h3 th:text="${intro.content4}"></h3>
+    <h3 th:text="${intro.content5}"></h3>
+    <h3 th:text="${intro.content6}"></h3>
+    
+   
+</div>
+	 <block th:if="${userRole==null}">
+       <a th:href="@{/main}">메인으로</a>
+       	</block>
+       <block th:if="${userRole!=null}">
+			<a th:href="@{/super}">메인으로</a>
+		</block>
+
+</body>
+</html>

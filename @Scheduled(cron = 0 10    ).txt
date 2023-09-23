@@ -1,0 +1,18 @@
+	    @Scheduled(cron = "0 */10 * * * *")
+	    public void sendEmailEveryHour() {
+	        
+	    	List<Reservation> todayrvs = themaMapper.todayreserve(LocalDate.now());
+	    	//System.out.println("오늘의 예약 =>"+ todayrvs);
+	    	
+	    	for(Reservation tr : todayrvs) {
+	    		LocalTime rTime = tr.getTime();
+	    		//System.out.println("LocalTime.now().withSecond(0):"+LocalTime.now().withSecond(0).withNano(0));
+	    		
+	    		long timeDifference = Duration.between(LocalTime.now().withSecond(0).withNano(0), rTime).toMinutes();
+	    		//System.out.println("timeDifference =>"+timeDifference);
+	    		if(timeDifference==120) {	// 예약 2시간에 자동으로 이메일 전송
+	    			System.out.println("예약시간=>"+tr.getDate()+" "+tr.getTime()+", 예약까지 남은 시간 => "+timeDifference+"분");
+	    			
+	    		}
+	    	}
+	    }

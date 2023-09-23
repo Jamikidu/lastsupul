@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+   <meta charset="UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+   <title>Thema List</title>
+   <link th:href="@{/css/headfoot.css}" rel="stylesheet" type="text/css">
+   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+   <style>
+      .pagination {
+         text-align: center;
+      }
+      
+      
+   </style>
+   <script th:inline="javascript">
+	$(document).ready(function () {
+		$('#branchName').change(function () {
+			var selectedName = $(this).val(); // select에서 선택한 값 가져오기
+			// URL 이동
+			console.log(selectedName)
+			window.location.href = '/thema/themaList?branchName=' + selectedName;
+
+		});
+	});
+
+</script>
+</head>
+
+<body>
+   <header>
+    	<block th:if="${userRole!=null}">
+			<div th:replace="~{inc/superHeader :: headerMenu}"></div>
+		</block>
+		<block th:unless="${userRole!=null}">
+			<div th:replace="~{inc/adminHeader :: headerMenu}"></div>
+		</block>
+   </header>
+   <h1>테마 목록</h1>
+  
+      <div>
+         <label for="branchName">지점 선택:</label>
+         <select name="branchName" id="branchName">
+            <option >-- 선택하세요 --</option>
+			 <option th:each="branch : ${branchList}" th:value="${branch.name}" th:text="${branch.name}"
+                  th:selected="${branch.name == branchName}"></option>
+          
+         </select>
+      </div>
+  
+   </br>
+   <!-- 선택된 지점이 없을 때는 버튼을 표시하지 않습니다 -->
+  
+      <button onclick="resetPage()">전체보기</button>
+   
+
+   <table border="">
+      <thead>
+         <tr>
+            <th>번호</th>
+            <th>테마ID</th>
+            <th>지점명</th>
+            <!--<th>지점 ID</th>-->
+            <th>타이틀</th>
+            <th>내용</th>
+         </tr>
+      </thead>
+      <tbody>
+         <tr th:each="thema, stat : ${themas}">
+            <td th:text="${page.totalElements - (page.number * page.size + stat.index)}"></td>
+            <td th:text="${thema.themaId}"></td>
+             <td th:text="${thema.branch.name}"></td>
+            <td>
+               <a th:href="|/thema/detail/${thema.themaId}|" th:text="${thema.title}"></a>
+            </td>
+           
+            <td th:text="${thema.content}"></td>
+         </tr>
+         <tr>
+            <td colspan="4">
+               <!-- 페이지 번호와 페이지 크기를 이용하여 페이지 링크 생성 -->
+               <div class="pagination">
+                   <!-- 이전 페이지로 이동 -->
+                   <span th:if="${page.hasPrevious()}">
+                       <a th:href="@{|/thema/themaList?page=0&size=${page.size}|}">&lt;&lt;</a>
+                       <a th:href="@{|/thema/themaList?page=${page.number - 1}&size=${page.size}|}">&lt;</a>
+                   </span>
+                   
+                   <!-- 페이지 번호 출력 -->
+                   <span th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}">
+                       <a th:href="@{|/thema/themaList?page=${i}&size=${page.size}|}" th:text="${i + 1}" th:class="${page.number == i} ? 'current'"></a>
+                   </span>
+                   
+                   <!-- 다음 페이지로 이동 -->
+                   <span th:if="${page.hasNext()}">
+                       <a th:href="@{|/thema/themaList?page=${page.number + 1}&size=${page.size}|}">&gt;</a>
+                       <a th:href="@{|/thema/themaList?page=${page.totalPages - 1}&size=${page.size}|}">&gt;&gt;</a>
+                   </span>
+               </div>
+
+            </td>
+         </tr>
+      </tbody>
+
+
+   </table>
+	<block th:if="${userRole != mull}">
+   <a th:href="@{/thema/form}">테마 등록</a>
+	</block>
+   <script>
+      function resetPage() {
+         window.location.href = "/thema/themaList";
+      }
+   </script>
+</body>
+
+</html>

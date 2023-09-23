@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>내예약내역</title>
+	<link th:href="@{/css/headfoot.css}" rel="stylesheet" type="text/css">
+
+</head>
+
+<body>
+	<header>
+		<div th:replace="inc/header :: headerMenu"></div>
+	</header>
+
+	<table border="">
+
+		<thead>
+			<tr>
+				<td colspan="8">
+					<h1>예약내역
+				</td>
+				</h1>
+			</tr>
+			<tr>
+				<th>예약번호</th>
+				<th>이름</th>
+				<th>테마명</th>
+				<th>날짜</th>
+				<th>시간</th>
+				<th>예약금</th>
+				<th colspan="2">총금액</th>
+			</tr>
+		</thead>
+		<tbody>
+
+
+			<tr th:each="reservation : ${reservations}" th:if="${reservation.date >= today}">
+
+
+
+				<td th:text="${reservation.rvNum}"></td>
+				<td th:text="${reservation.userName}"></td>
+				<td th:text="${reservation.themaName}"></td>
+				<td th:text="${#temporals.format(reservation.date, 'yyyy-MM-dd')}"></td>
+				<td th:text="${reservation.time}"></td>
+				<td th:text="${reservation.rvPrice}"></td>
+				<td colspan="2" th:text="${reservation.price}"></td>
+
+
+
+			</tr>
+			<tr>
+				<td colspan="8">
+					<h1>사용내역
+				</td>
+				</h1>
+			</tr>
+			<tr>
+				<th>예약번호</th>
+				<th>이름</th>
+				<th>테마명</th>
+				<th>날짜</th>
+				<th>시간</th>
+				<th>예약금</th>
+				<th>총금액</th>
+				<th>후기쓰기</th>
+			</tr>
+			</thead>
+		<tbody>
+
+
+			<tr th:each="reservation : ${reservations}">
+
+				<block th:if="${reservation.date < today}">
+
+					<td th:text="${reservation.rvNum}"></td>
+					<td th:text="${reservation.userName}"></td>
+					<td th:text="${reservation.themaName}"></td>
+					<td th:text="${#temporals.format(reservation.date, 'yyyy-MM-dd')}"></td>
+					<td th:text="${reservation.time}"></td>
+					<td th:text="${reservation.rvPrice}"></td>
+					<td th:text="${reservation.price}"></td>
+
+					<block th:if="${reservation.reviewYN==false}">
+						<td>
+							<a
+								th:href="|/board/review/write?branchName=${reservation.branch}&themaId=${reservation.thema.themaId}&rvId=${reservation.rvId}|">
+								<button value="글쓰기">후기쓰기
+								</button>
+							</a>
+						</td>
+					</block>
+					<block th:if="${reservation.reviewYN==true}">
+						<td>
+							<li>리뷰작성 완료! <a href="/user/mypage/writeList">(내가작성한글목록)</a></li>
+						</td>
+					</block>
+
+
+			</tr>
+		</tbody>
+	</table>
+
+
+
+</body>
+
+</html>

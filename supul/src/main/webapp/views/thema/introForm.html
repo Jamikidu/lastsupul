@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<link th:href="@{/css/headfoot.css}" rel="stylesheet" type="text/css">
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	<meta charset="UTF-8">
+	<title>테마 소개</title>
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+	<style>
+		body{width: 1200px; margin: 20px auto;}
+		.box {
+			border: solid #00f 1px;
+			border-radius: 10px;
+			text-decoration: none;
+			padding: 5px 10px;
+			margin: 10px;
+			display: inline-block;
+		}
+
+		.content {
+			font-size: 30px;
+			color: red;
+		}
+
+		.date {
+			cursor: pointer;
+		}
+
+		h4 {
+			border: solid #00f 1px;
+			border-radius: 10px;
+			text-decoration: none;
+			padding: 5px 10px;
+			margin: 10px;
+			width: 110px;
+		}
+	</style>
+	<script type="text/javascript">
+
+
+		function confirmrv() {
+			if (confirm('정말 예약하시겠습니까?')) {
+				// 예약을 수락한 경우, 예약 페이지로 이동
+				return true;
+			} else {
+				// 예약을 취소한 경우, 이동하지 않음
+				return false;
+			}
+		}
+		function confirmrv2() {
+			alert("회원만 가능합니다.")
+
+		}
+		$(function () {
+
+			var urlParams = new URLSearchParams(window.location.search);
+			var dateParam = urlParams.get('date');
+			var currentDate = new Date(); // 현재 날짜를 가져옵니다.
+
+			// 현재 날짜를 YYYY-MM-DD 형식으로 포맷팅합니다.
+			var formattedDate = currentDate.toISOString().split('T')[0];
+
+			$("#datepicker").datepicker({
+				dateFormat: "yy-mm-dd", // 선택한 날짜 형식
+				closeText: "닫기",
+				currentText: "오늘",
+				showButtonPanel: true,
+				changeMonth: true,      // 월 선택 가능
+				changeYear: true,       // 연도 선택 가능
+				hideIfNoPrevNext: true,
+				prevText: 'Earlier',
+				monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+				dayNames: ['일', '월', '화', '수', '목', '금', '토'],
+				dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'],
+				weekHeader: "주",
+				yearSuffix: '년',
+				minDate: "0",
+				maxDate: "+14D",
+			});
+
+		})
+	</script>
+
+
+</head>
+
+<body>
+	<header>
+		<div th:replace="~{inc/header :: headerMenu}"></div>
+	</header>
+	<h1>테마 소개</h1>
+	<table border="">
+
+		<!--메인 내용-->
+		<tr>
+			<td colspan="4">
+				<label>
+					<span>지점 선택 : </span>
+					<select name="name" id="spot">
+						<option value="전체">전체</option>
+						<option th:each="spot : ${brnList}" th:value="${spot.branchId}" th:text="${spot.name}">
+						</option>
+					</select>
+				</label>
+
+
+
+
+				<label>
+
+					<form name=date action="?">
+						<span>예약날짜 : </span>
+						<block>
+							<input type="text" name="date" id="datepicker" onchange="submit();" class="date"
+								th:value="${date}" width="150px" readonly="readonly" />
+						</block>
+
+						<label for="themaName">테마검색:</label>
+						<input type="text" id="themaName" name="themaName">
+						<button type="submit">검색</button>
+						<a href="/thema/intro"><button type="button">전체보기</button></a>
+					</form>
+				</label>
+
+
+
+
+				<!-- 사용자 이름 입력 -->
+
+
+
+
+			</td>
+		</tr>
+
+		<!--테마 시작-->
+		<tr th:each="thema : ${themaList.content}" class="thema" th:attr="branchId=${thema.branch.branchId}">
+			<td>
+				<figure th:if="${thema.poster != null}">
+					<img style="width: 250px;" th:src="@{/up/thema/{filename}(filename=${thema.poster})}"
+						alt="테스트사진위치" />
+				</figure>
+			</td>
+
+			<td th:each="brn : ${brnList}" th:if="${brn.branchId} == ${thema.branch.branchId}">
+				<h2 th:text="|[${brn.name}] ${thema.title}|"></h2>
+				<block th:if="${user != null}">
+				
+					<block th:if="${thema.wishList.empty}">
+				
+						<form action="/thema/addWishList" method="post">
+							<input type="hidden" name="themaId" th:value="${thema.themaId}">
+							<button type="submit">찜하기</button>
+						</form>
+					</block>
+				
+					<block th:unless="${thema.wishList.empty}">
+				
+						<block th:with="aaa=|${thema.themaId}_${user.id}|">
+							<block th:if="${#lists.contains(thema.wChkStrList ,aaa )}">
+								<form action="/thema/minusWishList" method="post">
+									<input type="hidden" name="themaId" th:value="${thema.themaId}">
+									<button type="submit">찜함</button>
+								</form>
+							</block>
+							<block th:unless="${#lists.contains(thema.wChkStrList ,aaa )}">
+								<form action="/thema/addWishList" method="post">
+									<input type="hidden" name="themaId" th:value="${thema.themaId}">
+									<button type="submit">찜하기</button>
+								</form>
+							</block>
+				
+						</block>
+					</block>
+				
+				</block>
+				<form action="">
+					<table border="">
+	                    <tr>
+						<td colspan="2">
+							<ul>
+								<li th:text="|장르 : ${thema.type}|"></li>
+								<li th:text="|인원(최대) : ${thema.people}명|"></li>
+								<li th:text="|이용 시간 : ${thema.playTime}분|"></li>
+								<li th:text="|난이도 : ${thema.level}|"></li>
+								<li th:text="|활동성 : ${thema.activity}|"></li>
+								<li th:text="|공포도 : ${thema.horror}|"></li>
+							</ul>
+						</td>
+						</tr>
+						<tr align="justify">
+							<td colspan="2" th:text="${thema.content}"></td>
+						</tr>
+
+						
+						<table border="">
+							<h3>랭킹</h3>
+							<tr>
+
+
+								<td colspan="1" th:text="순위"></td>
+								<td colspan="1" th:text="날짜"></td>
+								<td colspan="1" th:text="아이디"></td>
+								<td colspan="2" th:text="탈출시간"></td>
+
+
+							</tr>
+
+							<tr th:each="rank ,a : ${thema.ranking}" th:if="${a.index < 3}">
+
+							
+									<td colspan="1" th:text="${a.count}"></td>
+									<td colspan="1" th:text="${rank.date}"></td>
+									<td colspan="1" th:text="${rank.user.userId}"></td>
+									<td colspan="1" th:text="${rank.minutes}"></td>
+									<td colspan="1" th:text="${rank.seconds}"></td>
+							
+
+							</tr>
+						</table>
+						
+						<table border="">
+							<h3>리뷰</h3>
+							<tr>
+
+								<td colspan="1" th:text="제목"></td>
+								<td colspan="1" th:text="내용"></td>
+
+							</tr>																
+							<tr th:each="review ,a : ${thema.review}" th:if="${a.index < 3}">
+			
+									<td colspan="1" th:text="${review.title}"></td>
+									<td colspan="1" th:text="${review.content}"></td>
+
+							</tr>
+						</table>
+
+						<table>
+
+						<tr>
+							
+							<th>예약시간</th>
+							<td colspan="5">
+								<block th:each="t : ${thema.timetable}">
+									<block th:if="${thema.availabletime(t, date)}">
+										<block th:if="${thema.sale.empty }">
+						
+											<block th:if="${user==null}">
+												<a href="" class="box" onclick="return confirmrv2();">
+													<span th:text="${t}"></span>
+												</a>
+											</block>
+											<block th:unless="${user==null}">
+						
+												<a th:href="@{/reserve/rvForm(picktime=${t},date=${date},themaId=${thema.themaId})}" class="box"
+													onclick="return confirmrv();">
+													<span th:text="${t}"></span>
+												</a>
+											</block>
+						
+										</block>
+						
+						
+										<block th:unless="${thema.sale.empty} ">
+											<block th:with="aaa=|${date}_${t}_${thema.themaId}|">
+						
+												<block th:if="${#lists.contains(thema.reserChkList,aaa )}">
+													<span th:text="${#temporals.format(t, 'HH:mm')} + '(예약불가)'" class="box"></span>
+												</block>
+						
+												<block th:unless="${#lists.contains(thema.reserChkList,aaa )}">
+													<block th:if="${user==null}">
+														<a href="" class="box" onclick="return confirmrv2();">
+															<span th:text="${t}"></span>
+														</a>
+													</block>
+													<block th:unless="${user==null}">
+														<a th:href="@{/reserve/rvForm(picktime=${t},date=${date},themaId=${thema.themaId})}"
+															class="box" onclick="return confirmrv();">
+															<span th:text="${t}"></span>
+														</a>
+													</block>
+												</block>
+											</block>
+										</block>
+									</block>
+									<block th:unless="${thema.availabletime(t, date)}">
+										<span th:text="${#temporals.format(t, 'HH:mm')} + '(예약불가)'" class="box"></span>
+									</block>
+								</block>
+							</td>
+						
+						</tr>
+					</table>
+					</div>
+				</form>
+
+
+			</td>
+		</tr>
+	</table>
+		<!--푸터-->
+		
+		<tr>
+			<td height="200" colspan="4">
+				footer
+			</td>
+		</tr>
+
+	</table>
+
+	<script>
+		// select 요소 변경 시 호출되는 함수
+		document.getElementById('spot').addEventListener('change', function () {
+			var selectedBranchId = this.value;
+
+			// 모든 테마 행 숨기기
+			var themaRows = document.querySelectorAll('.thema');
+			themaRows.forEach(function (row) {
+				row.style.display = 'none';
+			});
+
+			// 선택한 branchId와 일치하는 테마 행 보이기
+			if (selectedBranchId === '전체') {
+				themaRows.forEach(function (row) {
+					row.style.display = 'table-row';
+				});
+			} else {
+				var matchingRows = document.querySelectorAll('.thema[branchId="' + selectedBranchId + '"]');
+				matchingRows.forEach(function (row) {
+					row.style.display = 'table-row';
+				});
+			}
+		});
+	</script>
+</body>
+
+</html>

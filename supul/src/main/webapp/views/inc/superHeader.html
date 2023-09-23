@@ -1,0 +1,54 @@
+<html xmlns="http://www.thymeleaf.org">
+<div th:fragment="headerMenu" id="header">
+		<ul class="menu" style="text-align: right;">
+		<li th:if="${userRole!=null}"><a href="/super/superlogout">총괄로그아웃</a></li>
+		<li th:unless="${userRole!=null}"><a href="/super/superlogin">총괄로그인</a></li>
+	</ul>
+	
+<ul class="menu">
+		<li>로고</li>
+		<li><a href="/main">유저홈</a></li>
+		<li><a href="/admin">관리자홈</a></li>
+		<li><a href="/super">총괄홈</a></li>
+		<li>|</li>
+		<li>
+			지점장 등록
+			<ul class="subMenu">
+				
+				<li><a href="/super/branch/form">지점등록</a></li>
+				<li><a href="/super/branchList">지점 리스트</a></li>
+				<li><a href="/super/modiBranchList">전화정보 수정요청 관리</a></li>
+				<li><a href="/super/admin/signup">지점장등록</a></li>
+				<li><a href="/super/adminList">지점장 리스트</a></li>
+				<li><a href="/thema/themaList">테마 리스트</a></li>
+				<li><a href="/super/home/update/SUPUL">홈페이지 수정</a></li>
+			</ul>
+		</li>
+		<li>
+			회원 및 결제내역
+			<ul class="subMenu">
+				<li><a href="/super/memberList">회원 목록</a></li>
+				<li><a th:href="|/super/rvList/전체|">예약내역</a></li>
+				<li><a href="/super/couponManage">쿠폰관리</a></li>
+			</ul>
+		</li>
+		<li>
+			게시판 관리
+			<ul class="subMenu">
+				<li><a th:href="@{/board/notice/list}">공지게시판</a></li>
+				<li><a th:href="@{/board/qna/list}">문의게시판</a></li>
+				<li><a th:href="@{/board/review/list}">후기게시판</a></li>
+			</ul>
+		</li>
+		<li>
+			통계
+			<ul class="subMenu">
+				
+				<li><a th:href="|/reserve/tonggye/전체|">매출 정산</a></li>
+			</ul>
+		</li>
+	</ul>
+</div>
+		
+		
+		

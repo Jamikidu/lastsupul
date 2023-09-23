@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns="http://www.thymeleaf.org"
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+layout:decorate="thyme/inc/total">
+<head>
+<meta charset="UTF-8">
+<!--lalala 입니다 : 이것으로 출력-->
+<title>메인</title>
+</head>
+<body>
+내가 lalala 이여  --의미없음
+</body>
+<th:block layout:fragment="hhh">
+	<td th:each="md : ${hNav}">
+	<a th:href="|?sn=${md.url}|" th:text="${md.txt}"/>
+	</td>
+</th:block>
+<th:block layout:fragment="mmm">
+	mmm의 내용을 여기다 적어요
+</th:block>
+<th:block layout:fragment="fff">
+	바닥으 ㅣ내용인가
+	</th:block>
+
+
+</html>
+
+

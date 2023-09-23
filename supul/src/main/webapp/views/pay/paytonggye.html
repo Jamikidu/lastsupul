@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Insert title here</title>
+	<link th:href="@{/css/headfoot.css}" rel="stylesheet" type="text/css">
+
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script>
+		$(document).ready(function () {
+			$('#branchName').change(function () {
+				var selectedName = $(this).val(); // select에서 선택한 값 가져오기
+				// URL 이동
+				console.log(selectedName)
+				window.location.href = '/sales/paytonggye/' + selectedName;
+
+			});
+		});
+
+	</script>
+</head>
+
+
+<body>
+	<header>
+		
+	
+		
+		<block th:if="${super!=null}">
+			<div th:replace="~{inc/superHeader :: headerMenu}"></div>
+		</block>
+		<block th:unless="${super!=null}">
+		<div th:replace="~{inc/adminHeader :: headerMenu}"></div>
+		</block>
+	</header>
+		<h1>결제 매출 현황</h1>
+	<block th:if="${super!=null}">
+		<label for="branchName">지점명:</label>
+		<select id="branchName" name="branchName">
+			<option th:value="전체" th:text="전체"></option>
+			<option th:each="brn : ${branchList}" th:value="${brn.name}" th:text="${brn.name}"
+				th:selected="${brn.name == #vars.branchName}" />
+		</select>
+		</label>
+	</block>
+
+
+	<form th:action="|/sales/paytonggye/${branchName}|" method="get">
+		<label for="startDate">Start Date:</label>
+		<input type="date" id="startDate" name="startDate" required>
+
+		<label for="endDate">End Date:</label>
+		<input type="date" id="endDate" name="endDate" required>
+
+		<button type="submit">날짜변경</button>
+	</form>
+
+	<table border="">
+
+
+		<tr>
+			
+				<td th:text="아이디"></td>
+				<td th:text="예약번호"></td>
+				<td th:text="이름"></td>
+				<td th:text="예약이름"></td>
+				<td th:text="예약날짜"></td>
+				<td th:text="예약시간"></td>
+				<td th:text="예약금"></td>
+				<td th:text="총금액"></td>
+				<td th:text="지점명"></td>
+			
+		</tr>
+
+		
+		<tr th:each="data : ${searchList}">
+			<block th:if="${data.pay !=null}">
+			<block th:if="${data.date > startDate}">
+				<td th:text="${data.rvId}"></td>
+				<td th:text="${data.rvNum}"></td>
+				<td th:text="${data.userName}"></td>
+				<td th:text="${data.themaName}"></td>
+				<td th:text="${data.date}"></td>
+				<td th:text="${data.time}"></td>
+				<td th:text="${data.rvPrice}"></td>
+				<td th:text="${data.price}"></td>
+				<td th:text="${data.branch.name}"></td>
+			</block>
+			</block>
+		</tr>
+		
+	</table>
+	<div th:if="${searchList.totalPages > 1}">
+		<tr class="pagination">
+			<td th:if="${searchList.hasPrevious}" class="page-item">
+				<a th:href="|/sales/paytonggye/${branchName}?page=0&sortBy=${sortBy}|" class="page-link">처음</a>
+			</td>
+			<td th:if="${searchList.hasPrevious}" class="page-item">
+				<a th:href="|/sales/paytonggye/${branchName}?page=${searchList.number - 1}&sortBy=${sortBy}|"
+					class="page-link">이전</a>
+			</td>
+			<td th:each="page : ${#numbers.sequence(0, searchList.totalPages - 1)}" class="page-item"
+				th:classappend="${searchList.number == page} ? 'active'">
+				<a th:href="|/sales/paytonggye/${branchName}?page=${page}&sortBy=${sortBy}|" class="page-link"
+					th:text="${page + 1}"></a>
+			</td>
+			<td th:if="${searchList.hasNext}" class="page-item">
+				<a th:href="|/sales/paytonggye/${branchName}?page=${searchList.number + 1}&sortBy=${sortBy}|"
+					class="page-link">다음</a>
+			</td>
+			<td th:if="${searchList.hasNext}" class="page-item">
+				<a th:href="|/sales/paytonggye/${branchName}?page=${searchList.totalPages - 1}&sortBy=${sortBy}|"
+					class="page-link">마지막</a>
+			</td>
+		</tr>
+	</div>
+
+
+
+	<block th:unless="${startDate==null}">
+
+	<block th:if="${super!=null}">
+		<h1>전체 월별 테마 매출</h1>
+			
+			<canvas id="myChart" width="300" height="300"></canvas>
+		</block>
+		
+		
+		
+		<h1>전체 테마 매출</h1>
+		<h3>기간 :[[${startDate}]]~[[${endDate}]] </h3>
+		<canvas id="myChart2" width="300" height="300"></canvas>
+		
+		
+		
+		<h3>기간 :[[${startDate}]]~[[${endDate}]]의 </h3>
+		<h3  th:each="branch :${branchtotal}"> 
+			<block th:if="${branch[0]==admin}">
+			[[${branch[0]}]] 매출 :[[${branch[1]}]]
+		</block> 
+		
+		
+		
+		</h3>
+	<label for="branchSelector">지점 선택:</label>
+		<select id="branchSelector" onchange="selected()">
+			<option th:value="전체" th:text="전체"></option>
+			<option th:each="brn : ${branchList}" th:value="${brn.name}" th:text="${brn.name}"
+				th:selected="${brn.name == #vars.branchName}" />
+		</select>	
+
+		<block th:if="${super!=null}">
+				
+			<h1>전체 지점 매출</h1>
+			<h3>기간 :[[${startDate}]]~[[${endDate}]] </h3>
+			<canvas id="myChart3" width="300" height="300"></canvas>
+</block>
+</body>
+
+
+
+
+
+
+
+
+
+<script th:inline="javascript">
+
+	var backgroundColors = []; // 색상 배열
+
+
+	// 월별 데이터 (예시 데이터)
+	var monthlyDataJson = [[${monthlyDataJson}]];
+	var monthlyData = JSON.parse(monthlyDataJson);
+	// 테마 목록 추출
+	var themes = Object.keys(monthlyData["2023-09"]).filter(function (key) {
+		return key !== "month"; // month 열은 레이블로 사용되므로 제외
+	});
+
+	// 데이터셋 생성
+	var datasets = themes.map(function (theme) {
+		var randomColor = getRandomColor();
+		return {
+			label: theme + ' 총금액',
+			data: Object.keys(monthlyData).map(function (month) {
+				return monthlyData[month][theme];
+			}),
+
+			backgroundColor: randomColor,
+			borderColor: randomColor,
+			borderWidth: 1
+		};
+	});
+
+	// 월 데이터 추출
+	var months = Object.keys(monthlyData);
+
+	// Chart.js 그래프 생성
+	var ctx = document.getElementById('myChart');
+	var myChart = new Chart(ctx, {
+		type: 'line',
+		data: {
+			labels: months,
+			datasets: datasets
+		},
+		options: {
+			responsive: false,
+			scales: {
+				y: {
+					beginAtZero: true
+				}
+			}
+		}
+	});
+
+
+
+	//=====================================두번째 차트
+	
+	
+	var branchData = [[${thematotal}]];
+
+
+
+
+
+	// 필터링된 데이터 생성
+	var filteredData;
+
+	if (selectedBranch === "전체") {
+		// "전체"를 선택한 경우 데이터 필터링 없이 전체 데이터 사용
+		filteredData = branchData;
+	} else {
+		// 특정 지점을 선택한 경우 해당 지점에 대한 데이터 필터링
+		filteredData = branchData.filter(item => item[0] === selectedBranch);
+	}
+	// 테마 목록 추출
+	var themes1 = [...new Set(filteredData.map(item => item[1]))];
+
+	// 데이터셋 생성
+	var datasets = themes1.map(function (theme) {
+		var data = [filteredData.find(item => item[1] === theme)?.[2] || 0]; // 선택한 지점과 테마에 대한 데이터 찾기
+
+		var randomColor = getRandomColor();
+
+		return {
+			label: theme,
+			data: data,
+			backgroundColor: randomColor,
+			borderColor: randomColor,
+			borderWidth: 1
+		};
+	});
+
+	// Chart.js 그래프 생성
+	var ctx2 = document.getElementById('myChart2');
+	var myChart = new Chart(ctx2, {
+		type: 'bar',
+		data: {
+			labels: [selectedBranch], // 선택한 지점 하나만 표시
+			datasets: datasets
+		},
+		options: {
+			responsive: false,
+			scales: {
+				y: {
+					beginAtZero: true
+				}
+			}
+		}
+	});
+//==============================================
+	
+		// 사용자가 선택한 지점
+	var selectedBranch = [[${admin}]]; // 사용자가 선택한 지점을 설정합니다
+	function selected() {
+		selectedBranch = document.getElementById("branchSelector").value;
+		// 선택한 값을 확인하기 위해 콘솔에 출력
+		console.log("사용자가 선택한 지점: " + selectedBranch);
+		SelectedBranch();
+	
+	}
+	// 차트를 업데이트하는 함수
+	
+	function SelectedBranch() {
+		var filteredData;
+
+		if (selectedBranch === "전체") {
+			// "전체"를 선택한 경우 데이터 필터링 없이 전체 데이터 사용
+			filteredData = branchData;
+		} else {
+			// 특정 지점을 선택한 경우 해당 지점에 대한 데이터 필터링
+			filteredData = branchData.filter(item => item[0] === selectedBranch);
+		}
+
+		// 테마 목록 추출
+		var themes = [...new Set(filteredData.map(item => item[1]))];
+
+		// 데이터셋 생성
+		var datasets = themes.map(function (theme) {
+			var data = [filteredData.find(item => item[1] === theme)?.[2] || 0]; // 선택한 지점과 테마에 대한 데이터 찾기
+
+			var randomColor = getRandomColor();
+
+			return {
+				label: theme,
+				data: data,
+				backgroundColor: randomColor,
+				borderColor: randomColor,
+				borderWidth: 1
+			};
+		});
+
+		// Chart.js 그래프 업데이트
+		myChart.data.labels = [selectedBranch];
+		myChart.data.datasets = datasets;
+		myChart.update();
+	}
+
+	// 페이지 로드 시 초기 차트 생성
+	SelectedBranch();
+
+	
+	//=====================================================================
+	
+	
+	var branchTotalData = [[${branchtotal}]];
+
+	// 지점 이름과 총 매출 데이터 추출
+	var branchNames = branchTotalData.map(function (item) {
+		return item[0];
+	});
+
+	var totalSales = branchTotalData.map(function (item) {
+		return item[1];
+	});
+
+	// Chart.js 그래프 생성
+	var ctx3 = document.getElementById('myChart3');
+	var myChart = new Chart(ctx3, {
+		type: 'bar',
+		data: {
+			labels: branchNames,
+			datasets: [{
+				label: '총 매출',
+				data: totalSales,
+				backgroundColor: 'rgba(75, 192, 192, 0.2)',
+				borderColor: 'rgba(75, 192, 192, 1)',
+				borderWidth: 1
+			}]
+		},
+		options: {
+			responsive: false,
+			scales: {
+				y: {
+					beginAtZero: true
+				}
+			}
+		}
+	});
+
+
+
+
+
+
+	function getRandomColor() {
+		var letters = '0123456789ABCDEF';
+		var color = '#';
+		for (var i = 0; i < 6; i++) {
+			color += letters[Math.floor(Math.random() * 16)];
+		}
+		return color;
+	}
+
+
+
+</script>
+
+</html>

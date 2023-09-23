@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+        <link th:href="@{/css/headfoot.css}" rel="stylesheet" type="text/css">
+    <title>회원가입</title>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script th:inline="javascript">
+    $(document).ready(function () {
+        // 생년월일 입력 필드 설정
+        $("#datepicker").datepicker({
+            dateFormat: "yy-mm-dd", // 선택한 날짜 형식
+            changeMonth: true,      // 월 선택 가능
+            changeYear: true,       // 연도 선택 가능
+            yearRange: "1900:2023", // 선택 가능한 연도 범위
+            monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+            maxDate: 0,             // 오늘 이전 날짜만 선택 가능
+        });
+
+        // 연락처 입력 필드 설정
+        const phoneFields = [$("#phone1"), $("#phone2"), $("#phone3")];
+        const phoneInput = $("#phone");
+
+        // 각 연락처 입력 필드에 입력할 때 이벤트 처리
+        phoneFields.forEach((field, index) => {
+            field.on("input", function () {
+                // 입력된 값 가져오기
+                const value = field.val();
+                // 숫자만 남기기
+                const numericValue = value.replace(/\D/g, '');
+                // 해당 값 설정
+                field.val(numericValue);
+
+                // 합쳐진 전화번호 만들기
+                const phone = phoneFields.map(field => field.val()).join('');
+                // 전체 전화번호 필드에 설정
+                phoneInput.val(phone);
+            });
+        });
+
+        // 아이디 중복 확인 상태 변수 초기화
+        var isAdminIdAvailable = false;
+        var isEmailAvailable = false;
+
+        // 아이디 입력 필드에 focus 이벤트 리스너 추가
+        $('#adminId').on('focus', function () {
+            // 중복 확인 결과 초기화
+            $('#adminId-status').text('');
+            isAdminIdAvailable = false;
+        });
+
+        $('#checkAdminIdButton').on('click', function () {
+            var adminId = $('#adminId').val();
+            if (adminId.trim() === '') {
+                $('#adminId-status').text('아이디를 입력하세요.');
+                return;
+            }
+            $.get('/admin/checkAdminId', {adminId: adminId}, function (result) {
+                if (result) {
+                    $('#adminId-status').text('사용 가능한 아이디입니다.');
+                    isAdminIdAvailable = true;
+                    checkSignupButtonState();
+                } else {
+                    $('#adminId-status').text('이미 사용 중인 아이디입니다.');
+                    isAdminIdAvailable = false;
+                    checkSignupButtonState();
+                }
+            });
+        });
+        
+        $('#email').on('focus', function () {
+            // 중복 확인 결과 초기화
+            $('#email-status').text('');
+            isEmailAvailable = false;
+        });
+        
+        $('#checkEmailButton').on('click', function () {
+			$('#email-status').text('');
+			isEmailAvailable = false;
+		    var emailFront = $('#email').val();
+		    var emailDomain = $('#emailDomain').val();
+		    var fullEmail = emailFront + emailDomain;
+		    if (emailFront.trim() === '') {
+		        $('#email-status').text('이메일 주소를 입력하세요.');
+		        return;
+		    }
+		    $.get('/admin/checkEmail', { email: fullEmail }, function (result) {
+		        if (result) {
+		            $('#email-status').text('사용 가능한 이메일 주소입니다.');
+		            isEmailAvailable = true;
+		            checkSignupButtonState();
+		        } else {
+		            $('#email-status').text('이미 사용 중인 이메일 주소입니다.');
+		            isEmailAvailable = false;
+		            checkSignupButtonState();
+		        }
+		    });
+		});
+
+
+    });
+</script>
+
+<style>
+		#phone1 {
+			width: 40px;
+			text-align: center;
+		}
+
+		#phone2 {
+			width: 50px;
+			text-align: center;
+		}
+
+		#phone3 {
+			width: 50px;
+			text-align: center;
+		}
+	</style>
+</head>
+<body>
+	<header>
+	<div th:replace="~{inc/superHeader :: headerMenu}"></div>
+	</header>
+
+    <h2>관리자등록</h2>
+    <form th:object="${admin}" method="post">
+        <table border="">
+			<tr>
+				<td>지점</td>
+				<td>
+					<select id="branchName" name="branchName" required>
+						<option value="" required>지점선택</option>
+						<option th:each="branch : ${branchlist}" th:value="${branch.name}" th:text="${branch.name}">
+						</option>
+					</select>
+				</td>
+			<tr>
+            <tr>
+                <td>아이디:</td>
+                <td>
+                    <input type="text" id="adminId" th:field="*{adminId}">
+                    <div th:if="${#fields.hasErrors('adminId')}" th:errors="*{adminId}" />
+                    <div><span id="adminId-status" class="text-danger"></span></div>
+                </td>
+                <td>
+                    <button type="button" id="checkAdminIdButton">아이디 중복 확인</button>
+                </td>
+            </tr>
+            <tr>
+                <td>비밀번호:</td>
+                <td>
+                    <input type="password" id="adminPw" th:field="*{adminPw}">
+                    <div th:if="${#fields.hasErrors('adminPw')}" th:errors="*{adminPw}" />
+                </td>
+            </tr>
+            <tr>
+                <td>비밀번호 확인:</td>
+                <td>
+                    <input type="password" id="adminPw1" th:field="*{adminPw1}">
+                    <div th:if="${#fields.hasErrors('adminPw1')}" th:errors="*{adminPw1}" />
+                </td>
+            </tr>
+            <tr>
+                <td>이름:</td>
+                <td>
+                    <input type="text" id="adminName" th:field="*{name}">
+                    <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" />
+                </td>
+            </tr>
+            <tr>
+				<td>생년월일:</td>
+				<td>
+					<input type="text" name="date" id="datepicker" class="date" maxlength="10" th:field="*{birth}"
+						placeholder="yyyy-mm-dd" />
+					<div th:if="${#fields.hasErrors('birth')}" th:errors="*{birth}" />
+				</td>
+			</tr>
+            <tr>
+				<td>이메일:</td>
+				<td>
+					<input type="text" id="email" th:field="*{email}" placeholder="이메일 주소">
+					<select id="emailDomain" name="emailDomain">
+						<option value="">직접 입력</option>
+						<option value="@gmail.com">gmail.com</option>
+						<option value="@naver.com">naver.com</option>
+						<option value="@nate.com">nate.com</option>
+						<option value="@daum.com">daum.com</option>
+					</select>
+					<div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" />
+					<div id="email-status"></div> <!-- 결과를 표시할 div 추가 -->
+				</td>
+				<td>
+					<button type="button" id="checkEmailButton">이메일 중복 확인</button>
+				</td>
+			</tr>
+            <tr>
+				<td>연락처:</td>
+				<td>
+					<input type="text" id="phone1" maxlength="3"> -
+					<input type="text" id="phone2" maxlength="4"> -
+					<input type="text" id="phone3" maxlength="4">
+					<input type="hidden" id="phone" th:field="*{phone}">
+					<div th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}" />
+				</td>
+			</tr>
+            
+            <tr>
+                <td colspan="2">
+                    <button type="submit" id="signupButton">가입하기</button>
+                    <div id="signupMessage"></div>
+                </td>
+            </tr>
+        </table>
+    </form>
+</body>
+</html>

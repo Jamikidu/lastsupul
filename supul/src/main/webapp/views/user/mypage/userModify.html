@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns="http://www.thymeleaf.org">
+
+<head>
+   <meta charset="UTF-8">
+   <title>내 정보 수정</title>
+   <link th:href="@{/css/headfoot.css}" rel="stylesheet" type="text/css">
+
+   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+   <script>
+      $(document).ready(function () {
+         // 비밀번호 필드 입력을 감시하고 값을 비밀번호 확인 필드에 복사
+         $("#userPw").on("input", function () {
+            $("#userPw1").val($(this).val());
+         });
+      });
+   </script>
+</head>
+
+<body>
+   <header>
+      <div th:replace="~{inc/header :: headerMenu}"></div>
+   </header>
+   <h1>내 정보 수정</h1>
+   <form method="post" th:object="${userData}">
+      <table border="">
+         <input type="hidden" th:field="*{userPw1}" />
+         <tr>
+            <td>이름:</td>
+            <td>
+               <input type="text" th:field="*{userName}" readonly>
+               <div th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}" />
+            </td>
+         </tr>
+         <tr>
+            <td>생년월일:</td>
+            <td>
+               <input type="text" th:field="*{birth}" readonly/>
+               <div th:if="${#fields.hasErrors('birth')}" th:errors="*{birth}" />
+            </td>
+         </tr>
+         <tr>
+            <td>아이디:</td>
+            <td>
+               <input type="text" th:field="*{userId}" readonly/>
+               <div th:if="${#fields.hasErrors('userId')}" th:errors="*{birth}" />
+            </td>
+         </tr>
+         <tr>
+            <td>비밀번호</td>
+            <td>
+               <input type="password" th:field="*{userPw}">
+               <div th:if="${#fields.hasErrors('userPw')}" th:errors="*{userPw}" />
+            </td>
+         </tr>
+         <tr style="display: none;">
+            <td>비밀번호 확인</td>
+            <td>
+               <input type="password" th:field="*{userPw1}">
+               <div th:if="${#fields.hasErrors('userPw1')}" th:errors="*{userPw1}" />
+            </td>
+         </tr>
+         <tr>
+            <td>이메일:</td>
+            <td>
+               <input type="text" th:field="*{email}">
+               <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" />
+            </td>
+         </tr>
+         <tr>
+            <td>연락처:</td>
+            <td>
+               <input type="text" th:field="*{phone}">
+               <div th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}" />
+            </td>
+         </tr>
+
+         <tr>
+            <td colspan="2">
+               <input type="submit" value="수정하기"></input>
+               <a href="/user/mypage"> 뒤로가기</a>
+            </td>
+         </tr>
+      </table>
+   </form>
+</body>
+
+</html>
