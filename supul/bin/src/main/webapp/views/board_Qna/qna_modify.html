@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>공지사항 수정</title>
+	<link th:href="@{/css/headfoot.css}" rel="stylesheet" type="text/css">
+
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+
+		h1 {
+			text-align: center;
+			margin: 30px auto;
+		}
+
+		table {
+			margin: 0 auto;
+		}
+
+		input {
+			width: 100%;
+		}
+
+		textarea {
+			width: 700px;
+			height: 500px;
+			resize: none;
+		}
+
+		button {
+			padding: 5px 15px;
+		}
+	</style>
+</head>
+
+<body>
+	<header>
+		<block th:if="${userRole != null}">
+			<div th:replace="~{inc/superHeader :: headerMenu}"></div>
+		</block>
+		<block th:if="${admin != null}">
+			<div th:replace="~{inc/adminHeader :: headerMenu}"></div>
+		</block>
+		<block th:if="${userRole == null and admin == null}">
+			<div th:replace="~{inc/header :: headerMenu}"></div>
+		</block>
+	</header>
+	<h1>문의사항 수정</h1>
+	<form th:action="@{/board/qna/modify/{id}(id=${qnaBoard.qnaId})}" method="post">
+		<table border="" cellspacing="">
+			<tr>
+				<td>매장</td>
+				<!--민정 수정-->
+				<td>
+					<select id="branchId" name="branchId" required>
+						<option value="">매장선택</option>
+						<option th:each="branch : ${branchlist}" th:value="${branch.branchId}"
+							th:text="${branch.name}" th:selected="${branch.branchId == qnaBoard.branch.branchId}">
+						</option>
+					</select>
+				</td>
+			<tr>
+		<tr>
+				<td>구분</td>
+				<td>
+					<select name="type" id="type">
+						<option value="예약문의">예약문의</option>
+						<option value="취소문의">취소문의</option>
+						<option value="기타문의">기타문의</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<th><label for="title">제목</label></th>
+				<td><input type="text" name="title" th:value="${qnaBoard.title}" /></td>
+				<td><input type="hidden" name="regDate" th:value="${qnaBoard.regDate}" /></td>
+			</tr>
+
+			<tr>
+				<th><label for="content">내용</label></th>
+				<td><textarea id="content" name="content" th:text="${qnaBoard.content}"></textarea></td>
+			</tr>
+			<tr>
+				<th colspan="2" align="right">
+					<button type="submit" name="action" value="수정">수정</button>
+					<button type="submit" name="action" value="삭제" onclick="return confirm('삭제하시겠습니까?')">삭제</button>
+					<!--<a th:href="@{/boardq/qList}"><button>목록</button></a>-->
+					<button type="submit" name="action" value="목록">뒤로</button>
+				</th>
+			</tr>
+		</table>
+	</form>
+</body>
+
+</html>

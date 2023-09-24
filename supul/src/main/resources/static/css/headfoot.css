@@ -1,6 +1,14 @@
 @charset "UTF-8";
 
-body{width: 1200px; margin: 0 auto;}
+body{
+	width: 1200px;
+	margin: 0 auto;
+	background-color:  rgb(224, 230, 223);
+	background-image: url("/images/bg_01.jpg");
+	background-repeat: no-repeat;
+	background-size: cover;
+	font-family: Arial, sans-serif;
+}
 
 #header {
 	background-color: #333;

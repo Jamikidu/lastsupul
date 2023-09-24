@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>공지사항 상세페이지</title>
+	<link th:href="@{/css/headfoot.css}" rel="stylesheet" type="text/css">
+
+</head>
+
+<body>
+	<header>
+		<block th:if="${userRole != null}">
+			<div th:replace="~{inc/superHeader :: headerMenu}"></div>
+		</block>
+		<block th:if="${admin != null && userRole == null}">
+			<div th:replace="~{inc/adminHeader :: headerMenu}"></div>
+		</block>
+		<block th:if="${userRole == null and admin == null}">
+			<div th:replace="~{inc/header :: headerMenu}"></div>
+		</block>
+	</header>
+	<h2>공지사항 상세페이지</h2>
+	<table border="" cellspacing="">
+		<tr>
+			<td>작성자</td>
+		
+				
+				<td><span th:text="${nDetail.writer}"></span></td>
+				
+			
+		</tr>
+		<tr>
+			<td>매장</td>
+			
+			<td><span th:text="${nDetail.branchName}"></span></td>
+			
+		</tr>
+		<tr>
+			<td>작성일</td>
+			<td><span th:text="${#temporals.format(nDetail.regDate, 'yyyy-MM-dd HH:mm')}"></span></td>
+		</tr>
+		<tr th:if="${nDetail.modiDate != null}">
+			<td>수정일</td>
+			<td><span th:text="${#temporals.format(nDetail.modiDate, 'yyyy-MM-dd HH:mm')}"></span></td>
+		</tr>
+		<tr>
+			<td>제목</td>
+			<td th:text="${nDetail.title}"></td>
+		</tr>
+		<tr>
+			<td>내용</td>
+			<td th:text="${nDetail.content}"></td>
+		</tr>
+		<!-- 이미지 파일이 업로드되었을 때만 이미지를 표시 -->
+		<!-- 파일이 업로드되었을 때만 파일 행 표시 -->
+		<tr th:if="${nDetail.fileName != null}">
+			<td>파일</td>
+			<td th:text="${nDetail.fileName}"></td>
+		</tr>
+		<tr th:if="${nDetail.fileName != null}">
+			<td colspan="2">
+				<!-- 이미지 파일일 때만 이미지 표시 -->
+				<img th:if="${nDetail.fileName.toLowerCase().endsWith('.jpg') || nDetail.fileName.toLowerCase().endsWith('.png') || nDetail.fileName.toLowerCase().endsWith('.gif')}"
+					th:src="|/up/boardN/${nDetail.fileName}|" />
+				<!-- 이미지 파일이 아닐 때는 파일 다운로드 링크 표시 -->
+				<span
+					th:unless="${nDetail.fileName.toLowerCase().endsWith('.jpg') || nDetail.fileName.toLowerCase().endsWith('.png') || nDetail.fileName.toLowerCase().endsWith('.gif')}">
+					<a th:text="${nDetail.fileName}" th:href="|/board/download/${nDetail.fileName}|"
+						download="${nDetail.fileName}">파일 다운로드</a>
+				</span>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<!--<a th:href="@{/board/nmodify/{id}(id=${nDetail.no})}"><button value="수정">수정</button></a>-->
+				<!-- 선택된 값을 URL 매개변수로 전달 -->
+				<block th:if="${admin!=null  && nDetail.branchName.equals(adminBn)|| userRole !=null} ">
+					<a
+						th:href="@{/board/notice/modify/{id}(id=${nDetail.noticeId})}">
+						<button value="수정">수정</button>
+					</a>
+					<a th:href="@{/board/notice/delete/{id}(id=${nDetail.noticeId})}"
+						onclick="return confirm('삭제하시겠습니까?')"><button value="삭제">삭제</button></a>
+				</block>
+				<a th:href="@{/board/notice/list}"><button value="목록">목록</button></a>
+			</td>
+		</tr>
+	</table>
+</body>
+
+</html>

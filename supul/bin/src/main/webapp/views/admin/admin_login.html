@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Login</title>
+        <link th:href="@{/css/headfoot.css}" rel="stylesheet" type="text/css">
+</head>
+<body>
+	   <header>
+       <div th:replace="~{inc/adminHeader :: headerMenu}"></div>
+   </header>
+    <h2>Admin Login</h2>
+    <form method="post" >
+        <table>
+            <tr>
+                <td>아이디:</td>
+                <td><input type="text" name="adminId"></td>
+            </tr>
+            <tr>
+                <td>비밀번호:</td>
+                <td><input type="password" name="adminPw"></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><button type="submit">Login</button></td>
+            </tr>
+        </table>
+    </form>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link th:href="@{/css/headfoot.css}" rel="stylesheet" type="text/css">
+
+</head>
+<body>
+	   <header>
+       <div th:replace="inc/header :: headerMenu"></div>
+   </header>
+	<h1>랭크 등록</h1>
+	<form method="post" th:object="${ranking}">
+		<table border="" >
+			<tr>
+			    <td>날짜</td>
+			    <td><input type="date" th:value="${rv.date}" name="date" readonly/></td>
+			</tr>
+			<tr>
+			    <td>지점명</td>
+			    <td>
+					<input type="text" th:value="${rv.branch.name}" name="branchName" readonly/>
+					<input type="hidden" th:value="${rv.branch.branchId}" name="branchId" readonly/>
+				</td>
+			</tr>
+			<tr>
+				<td>테마명</td>
+			    <td>
+			        <input type="text" th:value="${rv.themaName}"name=tdTitle readonly/>
+			        <input type="hidden" th:value="${rv.thema.themaId}"name=themaId readonly/>
+			    </td>
+			</tr>
+			<tr>
+			    <td>아이디</td>
+			    <td><input type="text" th:value="${rv.user.userId}" name="userId" readonly/></td>
+			</tr>
+			<tr>
+			    <td>남은 시간</td>
+			    <td>
+					<label for="minutes">분:</label>
+    <input type="number"  name="minutes" min="0" max="59" required />
+    
+    <label for="seconds">초:</label>
+    <input type="number"  name="seconds" min="0" max="59" required />
+					
+			    </td>
+			</tr>
+			<tr>
+			    <td>인원수</td>
+			    <td><input type="text" th:field="*{people}" /></td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<input type="submit" value="등록" />
+					<input type="button" onclick="goBack()" value="이전으로" />
+				</td>
+			</tr>
+		</table>
+	</form>
+	<script>
+function goBack() {
+    window.history.back(); // 브라우저의 이전 페이지로 이동
+}
+</script>
+</body>
+</html>

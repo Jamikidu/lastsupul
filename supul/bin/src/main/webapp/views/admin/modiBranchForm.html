@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+   <meta charset="UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+   <title>Branch 수정신청</title>
+   <link th:href="@{/css/headfoot.css}" rel="stylesheet" type="text/css">
+
+</head>
+
+<body>
+	<header>
+		<block th:if="${userRole!=null}">
+			<div th:replace="~{inc/superHeader :: headerMenu}"></div>
+		</block>
+		<block th:unless="${userRole!=null}">
+			<div th:replace="~{inc/adminHeader :: headerMenu}"></div>
+		</block>
+	</header>
+	<h1>지점장의 전화번호 수정 요청</h1>
+	<form th:action="@{/admin/branch/modiBranchForm}" method="post" th:object="${branch}">
+		<input type="hidden" th:field="*{branchId}" />
+		<label for="phone">전화번호:</label>
+		<input type="text" id="phone" name="phone" th:field="*{phone}" /><br />
+		<input type="hidden" name="originbranchId" th:value="${branchId}" />
+		<input type="hidden" name="originbranchname" th:value="${branchName}" />
+		<button type="submit" onclick="return confirm('수정요청 하시겠습니까?')">수정요청</button>
+	</form>
+	<a th:href="@{/admin}"><button value="돌아가기">돌아가기</button></a>
+</body>
+
+</html>

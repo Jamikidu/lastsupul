@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<link th:href="@{/css/headfoot.css}" rel="stylesheet" type="text/css">
+
+	<meta charset="UTF-8">
+	<title>프로필 편집</title>
+</head>
+
+<body>
+	<header>
+		<div th:replace="~{inc/header :: headerMenu}"></div>
+	</header>
+	<h2>프로필 편집</h2>
+	<form method="post" th:object="${user}">
+		<table border="">
+			<tr>
+				<td>이름:</td>
+				<td>
+					<input type="text" th:field="*{userName}">
+					<div th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}" />
+				</td>
+			</tr>
+			<tr>
+				<td>이메일:</td>
+				<td>
+					<input type="text" th:field="*{email}">
+					<div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" />
+				</td>
+			</tr>
+			<tr>
+				<td>연락처:</td>
+				<td>
+					<input type="text" th:field="*{phone}" maxlength="11">
+					<div th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}" />
+				</td>
+			</tr>
+			<tr>
+				<td>생년월일:</td>
+				<td>
+					<input type="text" th:field="*{birth}" />
+					<div th:if="${#fields.hasErrors('birth')}" th:errors="*{birth}" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<button type="submit">저장</button>
+				</td>
+			</tr>
+		</table>
+	</form>
+</body>
+
+</html>

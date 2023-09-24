@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>내가 찜한 목록이야</title>
+    <link th:href="@{/css/headfoot.css}" rel="stylesheet" type="text/css">
+</head>
+<body>
+      <header>
+       <div th:replace="inc/header :: headerMenu"></div>
+   </header>
+    <h1>찜</h1>
+    <table border="">
+        <tr>
+            <td>번호</td>
+            <td>매장명</td>
+            <td>테마명</td>
+        </tr>
+        <tr th:each="wish : ${wishThemes}">
+            <td th:text="${wish.id}"></td> 
+            <td th:text="${wish.thema.branch.name}"></td> 
+            <td th:text="${wish.thema.title}"></td>
+        </tr>
+    </table>
+    <a th:href="@{/main}">메인으로</a>
+</body>
+</html>

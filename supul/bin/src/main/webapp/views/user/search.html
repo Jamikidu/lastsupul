@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<link th:href="@{/css/headfoot.css}" rel="stylesheet" type="text/css">
+
+	<meta charset="UTF-8">
+	<title>아이디 비밀번호 찾기</title>
+</head>
+
+<body>
+	<header>
+		<div th:replace="~{inc/header :: headerMenu}"></div>
+	</header>
+	<h2>ID 찾기</h2>
+	<form method="post" action="/user/idresult">
+		<table border="">
+			<div>
+				<label for="email">이메일:</label>
+				<input type="text" id="email" name="email" required>
+			</div>
+			<div>
+				<button type="submit">ID 찾기</button>
+			</div>
+	</form>
+
+	<h2>비밀번호 찾기</h2>
+	<form method="post" action="/user/pwresult">
+		<div>
+			<label for="id">아이디:</label>
+			<input type="text" id="userid" name="userId" required>
+		</div>
+		<div>
+			<label for="email">이메일:</label>
+			<input type="text" id="email" name="email" required>
+		</div>
+		<div>
+			<button type="submit">비밀번호 찾기</button>
+		</div>
+		</table>
+	</form>
+</body>
+
+</html>

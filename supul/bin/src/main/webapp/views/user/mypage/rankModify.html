@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link th:href="@{/css/headfoot.css}" rel="stylesheet" type="text/css">
+
+</head>
+<body>
+	   <header>
+       <div th:replace="inc/header :: headerMenu"></div>
+   </header>
+	<h1>랭크 수정</h1>
+	<form method="post" th:object="${ranking}">
+
+		<table border="" >
+			<tr>
+			    <td>날짜</td>
+			    <td><input type="date" th:field="*{date}" /></td>
+			</tr>
+			<tr>
+			    <td>지점명</td>
+			    <td>
+			        <select th:field="*{branchId}" id="spot">
+			            <option th:each="br : ${brnList}" th:value="${br.branchId}" th:text="${br.name}" th:selected="${br.branchId == ranking.branchId}"></option>
+			        </select>
+			    </td>
+			</tr>
+			<tr>
+			    <td>테마명</td>
+			    <td>
+			        <select th:field="*{themaId}" id="thema">
+			            <option th:each="thema : ${themaList}" th:value="${thema.themaId}" th:text="${thema.title}" th:selected="${thema.themaId == ranking.themaId}"></option>
+			        </select>
+			    </td>
+			</tr>
+			<tr>
+			    <td>아이디</td>
+			    <td><input type="text" th:field="*{userId}" /></td>
+			</tr>
+			<tr>
+			    <td>클리어 시간</td>
+			    <td>
+					<input type="text" th:field="*{minute}" th:text="분" />
+					<input type="text" th:field="*{seconds}" th:text="초" />
+			    </td>
+			</tr>
+			<tr>
+			    <td>인원수</td>
+			    <td><input type="text" th:field="*{people}" /></td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<input type="submit" value="수정" />
+				</td>
+			</tr>
+		</table>
+	</form>
+	
+</body>
+</html>

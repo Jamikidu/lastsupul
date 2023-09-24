@@ -2,10 +2,10 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>예약정보입력</title>
 <link th:href="@{/css/headfoot.css}" rel="stylesheet" type="text/css">
+<link th:href="@{/css/kjh/reserveForm.css}" rel="stylesheet" type="text/css">
 <script type="text/javascript">
-
 
 		function confirmrv() {
 			if (confirm('당일 예약 취소시 예약금은 환불되지 않습니다.\n동의하시면 확인 원치않으시면 취소를 눌러주세요')) {
@@ -20,95 +20,92 @@
 </head>
 <body>
 
-   <header>
-      <div th:replace="inc/header :: headerMenu"></div>
-   </header>
+	<header>
+		<div th:replace="inc/header :: headerMenu"></div>
+	</header>
 
-   <block th:if="${user !=null}">
-      <form action="rvReg" method="post" Id="reservationForm">
-         예약 정보 입력 폼
-		<table border="">
-			<tr>
-				<td><label for="userName">사용자 이름:</label></td>
-				<td><input type="text" id="userName" name="userName" th:value="${user.userName}" required></td>
-			</tr>
-			<tr>
-				<td>전화번호:</td>
-				<td><input type="text" th:value="${user.phone}" /></td>
-			<tr>
-				<td><label for="themaName">테마 이름:</label></td>
-				<td><input type="text" id="themaName" name="themaName" th:value="${thema.title}" readonly></td>
-			</tr>
-			<tr>
-				<td><label for="date">날짜:</label></td>
-				<td><input type="text" id="date" name="date" th:value="${date}" readonly></td>
-			</tr>
-		
-			<tr>
-				<td><label for="time">시간:</label></td>
-				<td><input type="text" id="time" name="time" th:value="${picktime}" readonly></td>
-			</tr>
-		
-			<tr>
-				<td>예약인원:</td>
-				<td>
-					<select name="rvPeople" style="font-size: 16px; padding: 2px;">
-						<block th:each="i : ${#numbers.sequence(1, thema.people)}">
-							<option th:value="${i}" th:text="${i}">
-							</option>
-						</block>
-					</select>
-				</td>
-			</tr>
-			<td><label for="rvPrice">예약 가격:</label></td>
-			<td><input type="number" id="rvPrice" name="rvPrice" th:value="${thema.rvPrice}" readonly></td>
-			</tr>
-			<tr>
-				<td><label for="price">가격:</label></td>
-				<td><input type="number" id="price" name="price" th:value="${price}" readonly></td>
-			</tr>
-			<tr>
-				<td><label for="branch">지점:</label></td>
-				<td><input type="text" id="branch" name="branch_id" th:value="${thema.branch.name}" readonly>
-				</td>
-			</tr>
-			<!-- 정현수정 -->
-			<tr>
-				<td>사용할 쿠폰:</td>
-				<td>
-					<span th:if="${coupons.size() == 0}">사용 가능한 쿠폰이 없습니다.</span>
-					<span th:unless="${coupons.size() == 0}">
-						<input type="radio" id="couponNone" name="couponNum" th:value=${null} required>
-						<!-- value를 비워 사용안함을 나타냅니다 -->
-						<label for="couponNone">사용안함</label>
-						<span th:each="coupon, cpStat : ${coupons}">
-							<input type="radio" th:id="'coupon' + ${cpStat.index}" name="couponNum"
-								th:value="${coupon.couponNum}" required>
-							<label th:for="'coupon' + ${cpStat.index}"
-								th:text="${coupon.couponName + '(' + coupon.discount + '원할인)'}"></label>
+	<block th:if="${user !=null}">
+		<form action="rvReg" method="post" Id="reservationForm">
+			<h1>예약 정보 입력</h1>
+			<table>
+				<tr>
+					<td><label for="userName">사용자 이름:</label></td>
+					<td><input type="text" id="userName" name="userName" th:value="${user.userName}" required></td>
+				</tr>
+				<tr>
+					<td><label for="phone">전화번호:</label></td>
+					<td><input type="text" id="phone" th:value="${user.phone}" required/></td>
+				<tr>
+					<td>테마 이름:</td>
+					<td><input type="text" id="themaName" name="themaName" th:value="${thema.title}" readonly></td>
+				</tr>
+				<tr>
+					<td>선택한 날짜:</td>
+					<td><input type="text" id="date" name="date" th:value="${date}" readonly></td>
+				</tr>
+
+				<tr>
+					<td>선택한 시간:</td>
+					<td><input type="text" id="time" name="time" th:value="${picktime}" readonly></td>
+				</tr>
+
+				<tr>
+					<td>방문할 인원:</td>
+					<td>
+						<select name="rvPeople" style="font-size: 17px; padding: 3px;">
+							<block th:each="i : ${#numbers.sequence(1, thema.people)}">
+								<option th:value="${i}" th:text="${i}">
+								</option>
+							</block>
+						</select>
+					</td>
+				</tr>
+				<td>예약 가격:</td>
+				<td><input type="number" id="rvPrice" name="rvPrice" th:value="${thema.rvPrice}" readonly></td>
+				</tr>
+				<tr>
+					<td>가격:</td>
+					<td><input type="number" id="price" name="price" th:value="${price}" readonly></td>
+				</tr>
+				<tr>
+					<td>지점:</td>
+					<td><input type="text" id="branch" name="branch_id" th:value="${thema.branch.name}" readonly>
+					</td>
+				</tr>
+				<tr>
+					<td>사용할 쿠폰:</td>
+					<td>
+						<span th:if="${coupons.size() == 0}">사용 가능한 쿠폰이 없습니다.</span>
+						<span th:unless="${coupons.size() == 0}">
+							<input type="radio" id="couponNone" name="couponNum" th:value=${null} required>
+							<label for="couponNone">사용안함</label>
+							<span th:each="coupon, cpStat : ${coupons}">
+								<div>
+								<input type="radio" th:id="'coupon' + ${cpStat.index}" name="couponNum"
+									th:value="${coupon.couponNum}" required>
+								<label th:for="'coupon' + ${cpStat.index}"
+									th:text="${coupon.couponName + '(' + coupon.discount + '원할인)'}"></label></div>
+							</span>
 						</span>
-					</span>
-				</td>
-			</tr>
-			<!-- 정현수정끝 -->
-			<tr>
-				<input type="hidden" id="paid" name="paid" value="false">
-				<input type="hidden" id="noShow" name="noShow" value="false">
-				<input type="hidden" id="thema" name="themaId" th:value="${thema.themaId}" readonly>
-			</tr>
-			<tr>
-				<!-- 기은 수정 -->
-				<td colspan="2" align="center">
-					<p style="text-align:left; font-size: 14px;">
-						&lt;예약 및 입퇴실 안내&gt;</br>
+					</td>
+				</tr>
+				<tr>
+					<input type="hidden" id="paid" name="paid" value="false">
+					<input type="hidden" id="noShow" name="noShow" value="false">
+					<input type="hidden" id="thema" name="themaId" th:value="${thema.themaId}" readonly>
+				</tr>
+				<tr>
+					<td colspan="2" align="center" style="padding: 15px;">
+						<p style="text-align:left; font-size: 14px;">
+							<span class="notice">&lt;예약 및 입퇴실 안내&gt;</span></br>
 							<br />
 							- 게임시작 1시간전에 확인전화 시 통화되지 않을 경우 예약시간 30분전에 자동취소 됩니다.</br>
 							- 반드시 게임 시작 전에 입실 요청드리며, 10분전에 도착하여 사전 안내를 받으시기 바랍니다.</br>
 							- 늦게 도착하시면 게임시간이 줄어들 수 있으니 양해 부탁드립니다</br>
 							- 음주하신 손님도 입장이 제한되니 양해 부탁드립니다.</br>
 							- 게임룸 내부에 휴대폰 및 기타 촬영장비/인화성 물질/음식물/음주 등을 반입할 시 퇴실조치 되오며 환불이 불가합니다.
-					</p>
-					<textarea style="width: 95%; height: 100px; text-align: 13px; padding: 10px;" readonly>
+						</p>
+						<textarea style="width: 95%; height: 100px; text-align: 13px; padding: 10px;" readonly>
 - 개인정보취급방침 -
 개인정보 수집 및 이용에 대한 안내
 정보통신망법 규정에 따라 "SUPUL"에 회원가입 신청하시는 분께 수집하는 개인정보의 항목, 개인정보의 수집 및 이용목적, 개인정보의 보유 및 이용기간을 안내 드리오니 자세히 읽은 후 동의하여 주시기 바랍니다.
@@ -154,22 +151,22 @@
 보존 이유 : 통신비밀보호법 
 보존 기간 : 3개월 
 							</textarea></br>
-					<label>
-						<input type="checkbox" name="agree" value="agree" required>안내사항을 모두 확인하였으며 개인정보 처리방침에 동의합니다.
-					</label>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="2" align="center">
-					<input type="button" onclick="confirmrv()" value="예약하기">
-				</td>
-			</tr>
-		
-		</table>
-      </form>
-   </block>
-   <block th:unless="${user !=null}">
-      로그인세션이 만료되었습니다 <a href="/user/login">다시 로그인해주세요</a></block>
+						<input type="checkbox" id="agree" name="agree" value="agree" required>
+						<label for="agree"> 안내사항을 모두 확인하였으며 개인정보 처리방침에 동의합니다. </label>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2" align="center">
+						<input type="button" onclick="confirmrv()" value="예약하기">
+					</td>
+				</tr>
+
+			</table>
+		</form>
+	</block>
+	<block class="error-message" th:unless="${user !=null}">
+		로그인세션이 만료되었습니다 <a href="/user/login">다시 로그인해주세요</a>
+	</block>
 </body>
 
 </html>

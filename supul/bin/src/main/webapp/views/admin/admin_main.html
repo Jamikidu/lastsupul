@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<link th:href="@{/css/headfoot.css}" rel="stylesheet" type="text/css">
+
+	<title>메인 페이지</title>
+
+
+</head>
+
+<body>
+
+	<body>
+		<header>
+			<div th:replace="~{inc/adminHeader :: headerMenu}"></div>
+		</header>
+		<section>
+			<h1>관리자 메인 페이지 </h1>
+
+			<h2>오늘 예약 내역</h2>
+			<table border="">
+				<thead>
+					<tr>
+						<th>아이디</th>
+						<th>이름</th>
+						<th ><a th:href="|/admin?sortBy=themaName|">테마</a></th>
+						<th>날짜</th>
+						<th><a th:href="|/admin?sortBy=time|">시간</a></th>
+						<th><a th:href="|/admin?sortBy=price|">가격</a></th>
+					</tr>
+				</thead>
+				<tbody>
+					
+					<tr th:each="reservation : ${todayReservations}">
+						<block th:if="${adminBn == reservation.branch.name}">
+						<td th:text="${reservation.rvId}"></td>
+						<td th:text="${reservation.userName}"></td>
+						<td th:text="${reservation.themaName}"></td>
+						<td th:text="${#temporals.format(reservation.date, 'yyyy-MM-dd')}"></td>
+						<td th:text="${reservation.time}"></td>
+						<td th:text="${reservation.rvPrice}"></td>
+						</block>
+					</tr>
+					
+				</tbody>
+			</table>
+			[[${branchName}]]
+
+			<h2>테마별 매출</h2>
+         <table border="">
+            <tr th:each="entry : ${branchSales}">
+               <block th:if="${entry.key.name.equals(adminBn)}">
+                  <td th:text="${entry.key.name}"></td>
+                  <td>
+                     <table border="">
+                        <thead>
+                           <tr>
+                              <td>테마</td>
+                              <td>토탈</td>
+                           </tr>
+                        </thead>
+                        <tbody>
+                           <tr th:each="themeEntry : ${entry.value}">
+                              <block th:if="${themeEntry.key.branch.name.equals(adminBn)}">
+                                 <td th:text="${themeEntry.key.title}"></td>
+                                 <td th:text="${themeEntry.value}"></td>
+                              </block>
+                           </tr>
+                        </tbody>
+                     </table>
+                  </td>                        
+               </block>
+            </tr>
+            </tbody>
+				</thead>
+			</table>
+			</td>
+			</tr>
+
+			</table>
+
+		</section>
+
+	
+
+		<a href="admin/adminlogin">이몸이 관리자 로그인이다.</a><br>
+		
+		</footer>
+		
+	</body>
+</body>
+
+</html>
+</body>
+
+</html>

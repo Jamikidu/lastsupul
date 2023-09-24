@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>댓글 수정</title>
+	<link th:href="@{/css/headfoot.css}" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+
+	<header>
+		<block th:if="${userRole != null}">
+			<div th:replace="~{inc/superHeader :: headerMenu}"></div>
+		</block>
+		<block th:if="${admin != null && userRole == null}">
+			<div th:replace="~{inc/adminHeader :: headerMenu}"></div>
+		</block>
+		<block th:if="${userRole == null and admin == null}">
+			<div th:replace="~{inc/header :: headerMenu}"></div>
+		</block>
+		</header>
+	<!-- 민정 답글 수정 -->
+	<h1>답글 수정</h1>	
+	<form th:action="@{/board/qna/comment/{commentId}/modify(commentId=${qnaComment.commentId})}" method="post">
+		<input type="hidden" name="commentId" th:value="${qnaComment.commentId}">
+		<textarea name="content" placeholder="댓글을 수정하세요" required th:text="${qnaComment.content}"></textarea>
+		<button type="submit">답글 수정</button>
+	</form>
+	<!-- 댓글 삭제 버튼 -->
+	<form th:action="@{/board/qna/comment/{commentId}/delete(commentId=${qnaComment.commentId})}" method="post"
+		style="display: inline;">
+		<button type="submit" onclick="return confirm('정말로 삭제하시겠습니까?')">삭제</button>
+	</form>
+	<a th:href="@{/board/qna/{qnaId}}">댓글 목록으로 돌아가기</a>
+</body>
+
+</html>

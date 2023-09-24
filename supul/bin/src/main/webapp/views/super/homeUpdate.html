@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+   <meta charset="UTF-8">
+   <title>Edit Homepage</title>
+  
+  
+   <link th:href="@{/css/headfoot.css}" rel="stylesheet" type="text/css">
+
+</head>
+
+<body>
+   <header>
+     	<div th:replace="~{inc/superHeader :: headerMenu}"></div>
+   </header>
+   <h1>홈페이지 소개 수정</h1>
+   <form th:action="@{/super/home/update}" method="post" th:object="${homepage}">
+
+
+      <label for="title1">title1</label>
+      <input type="text" id="title1" name="title1" th:field="*{title1}" /><br />
+      
+       <hr />
+       
+       <label for="title2">title2</label>
+      <input type="text" id="title2" name="title2" th:field="*{title2}" /><br />
+      <label for="content1">content1</label>
+      <textarea id="content1" name="content1" th:field="*{content1}"></textarea><br />
+     
+      <hr />
+      
+      <label for="title3">title3</label>
+      <textarea id="title3" name="title3" th:field="*{title3}"></textarea><br />      
+      <label for="subtitle1">subtitle1</label>
+      <input type="text" id="subtitle1" name="subtitle1" th:field="*{subtitle1}" /><br />
+      <br/>
+      <label for="content2">content2</label>
+      <textarea id="content2" name="content2" th:field="*{content2}"></textarea><br />
+      <label for="content3">content3</label>
+      <textarea id="content3" name="content3" th:field="*{content3}"></textarea><br />
+      <label for="content4">content4</label>
+      <textarea id="content4" name="content4" th:field="*{content4}"></textarea><br />
+      <label for="content5">content5</label>
+      <textarea id="content5" name="content5" th:field="*{content5}"></textarea><br />
+      <label for="content6">content6</label>
+      <textarea id="content6" name="content6" th:field="*{content6}"></textarea><br />
+      
+      
+
+
+      <button type="submit">저장</button>
+   </form>
+</body>
+
+</html>

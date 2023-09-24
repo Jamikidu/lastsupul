@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>후기 작성</title>
+	<link th:href="@{/css/headfoot.css}" rel="stylesheet" type="text/css">
+
+</head>
+
+<body>
+	<header>
+		<block th:if="${userRole != null}">
+			<div th:replace="~{inc/superHeader :: headerMenu}"></div>
+		</block>
+		<block th:if="${admin != null}">
+			<div th:replace="~{inc/adminHeader :: headerMenu}"></div>
+		</block>
+		<block th:if="${userRole == null and admin == null}">
+			<div th:replace="~{inc/header :: headerMenu}"></div>
+		</block>
+	</header>
+	<h1>후기 작성</h1>
+	<form th:action="@{/board/review/write}" method="post" enctype="multipart/form-data">
+		<table border="">
+			<tr>
+				<td>매장</td>
+				<td>
+					<input type="text" th:value="${branch.name}" th:name="branchName" readonly />
+
+				</td>
+			</tr>
+			<tr>
+				<td>테마</td>
+				<td>
+					<input type="text" th:value="${thema.title}" th:name="themaName" readonly />
+					<input type="hidden" th:value="${thema.themaId}" th:name="themaId" readonly />
+				</td>
+			</tr>
+			<tr>
+				<td>작성자</td>
+				<td>
+					<input type="text" th:name="userName" th:value="${user.userName}" />
+					<input type="hidden" name=id th:value="${user.Id}" />
+				</td>
+			</tr>
+			<tr>
+				<td>탈출여부</td>
+				<td>
+					<input type="radio" id="clear" name="clear" value="true" required>
+					<label for="clear">탈출</label>
+					<input type="radio" id="not_clear" name="clear" value="false" required>
+					<label for="not_clear">타임오버</label>
+				</td>
+			</tr>
+					<tr>
+			    <td>클리어 시간</td>
+			    <td>
+					<input type="text" name="escTime" placeholder="00분 00초" />
+			    </td>
+			</tr>
+			<tr>
+				<td>평점</td>
+				<td>
+					<select id="grade" name="grade">
+						<option value="1">1</option>
+						<option value="1.5">1.5</option>
+						<option value="2">2</option>
+						<option value="2.5">2.5</option>
+						<option value="3">3</option>
+						<option value="3.5">3.5</option>
+						<option value="4">4</option>
+						<option value="4.5">4.5</option>
+						<option value="5">5</option>
+					</select>
+				</td>
+			</tr>
+
+			<tr>
+				<td>파일</td>
+				<td><input type="file" id="file" name="file" accept="image/*"></td>
+			</tr>
+			<tr>
+				<td>제목</td>
+				<td><input type="text" id="title" name="title"></td>
+			</tr>
+			<tr>
+				<td>내용</td>
+				<td><textarea id="content" name="content"></textarea></td>
+			</tr>
+			<input type="hidden" name="rvId" th:value="${rvId}" />
+			<tr>
+				<td colspan="2" align="right">
+					<button type="submit">작성</button>
+					<a th:href="@{/board/review/list}"><button value="목록">목록</button></a>
+				</td>
+			</tr>
+		</table>
+	</form>
+</body>
+
+</html>

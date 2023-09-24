@@ -1,0 +1,50 @@
+@charset "UTF-8";
+
+body{width: 1200px; margin: 0 auto;}
+
+#header {
+	background-color: #333;
+	width: 1200px;
+	
+}
+
+ul.menu>li a {
+	text-decoration: none;
+	color: white;
+}
+
+ul,
+li {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+
+}
+
+ul.menu>li {
+	display: inline-block;
+	width: 130px;
+	padding: 5px 10px;
+	text-align: center;
+	position: relative;
+	color: white;
+}
+
+ul.menu>li ul.subMenu {
+	display: none;
+	position: absolute;
+	top: 30px;
+	left: 0;
+}
+
+ul.menu>li:hover ul.subMenu {
+	display: block;
+	background-color: #333;
+}
+
+ul.menu>li ul.subMenu>li {
+	display: inline-block;
+	width: 120px;
+	padding: 5px 10px;
+	text-align: center;
+}

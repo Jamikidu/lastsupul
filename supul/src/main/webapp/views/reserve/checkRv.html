@@ -5,6 +5,7 @@
 	<meta charset="UTF-8">
 	<title>내 예약 정보</title>
 	<link th:href="@{/css/headfoot.css}" rel="stylesheet" type="text/css">
+	<link th:href="@{/css/kjh/checkRv.css}" rel="stylesheet" type="text/css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script th:inline="javascript">
 		function confirmcancle() {
@@ -16,19 +17,6 @@
 				return false;
 			}
 		}
-		
-			function canclealert(rvId) {
-			if (confirm("당일 예약 취소시 예약금은 환불되지 않습니다.\n 동의하시면 확인 동의하지 않으시면 취소 를 선택해주세요.")) {
-			
-			window.location.href="/reserve/cancleRv?rvId="+rvId
-				return true;
-			} else {
-
-				return false;
-			}
-			
-			
-		}
 	</script>
 </head>
 
@@ -36,16 +24,15 @@
 	<header>
 		<div th:replace="~{inc/header :: headerMenu}"></div>
 	</header>
+	<div class="container">
 	<h1>예약 정보 확인</h1>
 	<div th:if="${rvList != null and rvList.isEmpty()}">
 		<img src="/images/텅.jpg" />
 		<h2>예약중인 시간이 없습니다</h2>
 	</div>
-	<block th:each="rv, a : ${rvList}" th:if="${!rv.cancle}">
-	
-	
-		
-		<table border="" th:if="(${rv.date} > ${nowdate}) or (${rv.date} == ${nowdate} and ${rv.time} > ${nowtime})">
+	<block th:each="rv, a : ${rvList}" th:if="${!rv.cancle}" >
+		<div class="t1">
+		<table th:if="(${rv.date} > ${nowdate}) or (${rv.date} == ${nowdate} and ${rv.time} > ${nowtime})">
 			<tr>
 				<td>예약번호</td>
 				<td th:text="${rv.rvNum}" />
@@ -70,38 +57,38 @@
 				<td th:text="${rv.themaName}" />
 			</tr>
 			<tr>
-				<td>예약하신날짜</td>
+				<td>예약신청날짜</td>
 				<td th:text="${#temporals.format(rv.rvDate, 'yyyy-MM-dd HH:mm')}" />
 			</tr>
 			<tr>
 				<block th:if="${rv.rvpay !=null}">
 
-				<span  id="impUidexe" th:text="${rv.rvpay.impUidexe}" style="display: none;"></input>
-				<span  id="imp_uid" th:text="${rv.rvpay.imp_uid}" style="display: none;"></input>
-				<span  id="merchantUid" th:text="${rv.rvpay.merchant_uid}" style="display: none;"></span>
+					<span id="impUidexe" th:text="${rv.rvpay.impUidexe}" style="display: none;"></input>
+						<span id="imp_uid" th:text="${rv.rvpay.imp_uid}" style="display: none;"></input>
+							<span id="merchantUid" th:text="${rv.rvpay.merchant_uid}" style="display: none;"></span>
 				</block>
 			</tr>
-	         <tr>
-				 [[${rv.date.equals(nowdate)}]]
-	            <td colspan="2" align="right">
-					<block th:if ="${rv.date.equals(nowdate)}">
-	            <button id="cancelButton" th:onclick="|return canclealert(${rv.rvId});|" >결제 취소</button>
-	             [[${rv.date.equals(nowdate)}]]+2
-           			</block>
-           		<block th:unless ="${rv.date.equals(nowdate)}">
-	            <button id="cancelButton" th:onclick="return confirmcancle();" >결제 취소</button>
-	             [[${rv.date.equals(nowdate)}]]+1
-           		</block>
-            </td>
-         </tr>
+			<tr>
 
+				<td colspan="2" align="right">
+					<block th:if="${rv.date.equals(nowdate)}">
+						<button id="cancelButton" th:onclick="|return canclealert(${rv.rvId});|">해당일 취소불가</button>
+
+					</block>
+					<block th:unless="${rv.date.equals(nowdate)}">
+						<button id="cancelButton" th:onclick="return confirmcancle();" class="cancle">결제 취소</button>
+
+					</block>
+				</td>
+			</tr>
+			
 		</table>
-	
+		</div>
 	</block>
 
-<block th:each="rv,a : ${rvList}" th:if="${rv.cancle}">
-	
-	<h1>취소내역</h1>
+	<block th:each="rv,a : ${rvList}" th:if="${rv.cancle}">
+
+		<h1>취소내역</h1>
 		<table border="" th:if="(${rv.date} > ${nowdate}) or (${rv.date} == ${nowdate} and ${rv.time} > ${nowtime})">
 			<tr>
 				<td>예약번호</td>
@@ -130,52 +117,52 @@
 				<td>예약하신날짜</td>
 				<td th:text="${#temporals.format(rv.rvDate, 'yyyy-MM-dd HH:mm')}" />
 			</tr>
-			
+
 
 		</table>
-	
+
 	</block>
-	
-	
-	
-	 <script th:inline="javascript">
-   function cancelPayment() {
-        var impUidexe = $("#impUidexe").text();
-        var imp_uid = $("#imp_uid").text();
-        var merchant_uid = $("#merchantUid").text();
-       
 
-        // 결제 정보
-        var paymentData = {
-			
-            impUidexe: impUidexe,             // 결제 고유번호
-            imp_uid: imp_uid,             // 결제 고유번호
-            merchant_uid: merchant_uid   // 주문번호
-        };
 
-        // AJAX 요청 보내기
-        $.ajax({
-            type: "POST",
-            url: "/pay/cancelPay",
-            data: JSON.stringify(paymentData), // 결제 정보를 JSON 문자열로 변환하여 전송
-            contentType: "application/json",
-            success: function(data) {
-                // 성공적인 응답 처리
-                console.log("결제 취소 성공:", data);
-                alert("결제 취소 성공했습니다." + data)
-                location.href="/reserve/checkRv"
-                // 여기에서 UI를 업데이트하거나 결과를 표시할 수 있습니다.
-            },
-            error: function(error) {
-                // 요청 실패 시 오류 처리
-                console.error("Error:", error.responseText);
-                alert("결제 취소 실패" + error.responseText)
-                // 여기에서 오류 메시지를 표시하거나 다른 조치를 취할 수 있습니다.
-            }
-        });
-    }
-    </script>
-   
+
+	<script th:inline="javascript">
+		function cancelPayment() {
+			var impUidexe = $("#impUidexe").text();
+			var imp_uid = $("#imp_uid").text();
+			var merchant_uid = $("#merchantUid").text();
+
+
+			// 결제 정보
+			var paymentData = {
+
+				impUidexe: impUidexe,             // 결제 고유번호
+				imp_uid: imp_uid,             // 결제 고유번호
+				merchant_uid: merchant_uid   // 주문번호
+			};
+
+			// AJAX 요청 보내기
+			$.ajax({
+				type: "POST",
+				url: "/pay/cancelPay",
+				data: JSON.stringify(paymentData), // 결제 정보를 JSON 문자열로 변환하여 전송
+				contentType: "application/json",
+				success: function (data) {
+					// 성공적인 응답 처리
+					console.log("결제 취소 성공:", data);
+					alert("결제 취소 성공했습니다." + data)
+					location.href = "/reserve/checkRv"
+					// 여기에서 UI를 업데이트하거나 결과를 표시할 수 있습니다.
+				},
+				error: function (error) {
+					// 요청 실패 시 오류 처리
+					console.error("Error:", error.responseText);
+					alert("결제 취소 실패" + error.responseText)
+					// 여기에서 오류 메시지를 표시하거나 다른 조치를 취할 수 있습니다.
+				}
+			});
+		}
+	</script>
+	</div>
 </body>
 
 </html>

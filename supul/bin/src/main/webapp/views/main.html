@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>메인 페이지</title>
+<link th:href="@{/css/headfoot.css}" rel="stylesheet" type="text/css">
+</head>
+<body>
+   
+   <header>
+       <div th:replace="~{inc/header :: headerMenu}"></div>
+   </header>
+   <section>
+      <table border="">
+     
+        
+         <tr>
+            <td>어드민</td><td><a href="/admin">어드민</a></td>   
+         </tr>
+     
+         <tr>
+            <td>총괄</td><td><a href="/super">슈퍼</a></td>   
+         </tr>
+      </table>
+      
+      <h2>내가 섹션1이다</h2>
+      <div th:if="${user != null}">
+          <p>사용자 이름: <span th:text="${user.userName}"></span></p>
+      </div>
+      
+   </section>
+   
+   <section>
+      <h2>내가 섹션2다</h2>
+   </section>
+   
+   <footer>
+       <th:block th:if="${user == null}">
+           <a href="user/signup">이몸이 회원가입이다.</a><br>
+         
+      <a href="user/login">이몸이 로그인이다.</a><br>
+     
+      <a href="user/search">이몸이 아이디,비밀번호 찾기다.</a><br>
+       </th:block>
+    
+       <th:block th:unless="${user == null}">
+       
+         
+           <a href="/user/logout">로그아웃</a>
+       </th:block>
+   </footer>
+   
+</body>
+</body>
+</html>
+</body>
+</html>

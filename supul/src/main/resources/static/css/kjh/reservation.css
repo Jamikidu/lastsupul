@@ -1,0 +1,82 @@
+@charset "UTF-8";
+
+/* 제목 스타일 */
+h1 {
+	font-size: 32px;
+	margin-bottom: 20px;
+	text-align: center;
+}
+
+/* select 스타일 */
+select {
+	padding: 5px;
+	font-size: 16px;
+}
+
+/* 테이블 스타일 */
+table {
+	width: 100%;
+	border-collapse: collapse;
+	margin-bottom: 20px;
+}
+
+table,
+th,
+td {
+	border: 1px solid #ccc;
+}
+
+th,
+td {
+	padding: 10px;
+	text-align: center;
+}
+
+th {
+	background-color: #000;
+	color: moccasin;
+}
+
+tr {
+	background-color: #fff;
+}
+
+/* 페이지네이션 스타일 */
+.pagination {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-top: 20px;
+}
+
+.page-item {
+	margin: 0 5px;
+}
+
+.page-link {
+	text-decoration: none;
+	padding: 5px 10px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	color: #333;
+	background-color: #fff;
+}
+
+.page-link:hover {
+	background-color: #333;
+	color: #fff;
+}
+
+.page{text-align: center;}
+
+.search{text-align: center; margin-top: 20px;}
+
+.search label{font-size: 18px;}
+
+.search input{padding: 5px;}
+
+.search button{height: 27px;}
+
+button{font-weight: bold; background-color: seashell;}
+
+a{text-decoration: none; color: brown;}

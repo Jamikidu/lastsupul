@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
     <title>Branch List</title>
     <link th:href="@{/css/headfoot.css}" rel="stylesheet" type="text/css">
-
+	<link th:href="@{/css/kjh/branchList.css}" rel="stylesheet" type="text/css">
 </head>
 <body>
       <header>
@@ -22,16 +22,16 @@
    
     <table border="">
         <thead>
-            <tr>
-            <th>no</th>
-                <th>이름</th>
-                <th>주소</th>
-                <th>전화번호</th>
-                <th>좌표</th>
-                 <block th:if="${userRole != null}">
-                <th>작업</th>
-                   </block>
-            </tr>
+			<tr>
+				<th>no</th>
+				<th>이름</th>
+				<th>주소</th>
+				<th>전화번호</th>
+				<th>좌표</th>
+				<block th:if="${userRole != null}">
+					<th>작업</th>
+				</block>
+			</tr>
         </thead>
         <tbody>
             <tr th:each="branch, stat : ${list}">
@@ -46,23 +46,25 @@
                 <td th:text="${branch.phone}"></td>
                 <td th:text="${branch.coordinate}"></td>
                 <block th:if="${userRole != null}">
-                <td>
+                <td align="center">
                     <!-- 수정 버튼 -->
-                    <a th:href="|/super/branch/update/${branch.branchId}|">  수정</a>
+                    <a th:href="|/super/branch/update/${branch.branchId}|"><button type="button" class="btn1">수정</button></a>
                     
                     <!-- 삭제 버튼 -->
-                    <a th:href="@{'/super/branch/delete/' + ${branch.branchId}}">삭제</a>
+                    <a th:href="@{'/super/branch/delete/' + ${branch.branchId}}"><button type="button">삭제</button></a>
                 </td>
                 </block>
             </tr>
         </tbody>
     </table>
-    <block th:if="${userRole !=null}">
-    <a th:href="@{/super/branch/form}">지점 등록</a>   
-    <a th:href="@{/super}">관리자메인으로</a>
-     </block>
-      <block th:if="${userRole ==null}">
-     <a th:href="@{/admin}">관리자메인으로</a>
-      </block>
+	<block th:if="${userRole !=null}">
+		<div class="page">
+			<a th:href="@{/super/branch/form}"><button type="button">지점 등록</button></a>
+			<a th:href="@{/super}"><button type="button">관리자메인으로</button></a>
+	</block>
+	<block th:if="${userRole ==null}">
+		<a th:href="@{/admin}"><button type="button">관리자메인으로</button></a>
+		</div>
+	</block>
 </body>
 </html>

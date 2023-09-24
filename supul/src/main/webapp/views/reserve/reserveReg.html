@@ -2,149 +2,187 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>예약결제</title>
 <link th:href="@{/css/headfoot.css}" rel="stylesheet" type="text/css">
 <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<style>
 
-
-</head>
-
-<body>
-	   <header>
-       <div th:replace="inc/header :: headerMenu"></div>
-   </header>
-    <!-- 정현수정 -->
-   [[${rv.rvNum}]] 예약번호<br>
-   <block th:if="${coupon !=null}">
-      [[${coupon.discount}]] 할인금액<br>
-   </block>
-   [[${rv.rvPrice}]] 예약금<br>
-
-   결제 하시겠습니까?<br>
-   <!-- 정현수정끝 -->
-   
-
-    <button onclick="requestPay()">카카오페이 결제하기</button>
- 
-  
-  <a th:href="@{/main}">메인으로</a>
-
-<script th:inline="javascript">
-	 var IMP = window.IMP; 
-	IMP.init("imp38525213");	
-
-
-
+	.container {
+		text-align: center;
+		margin: 30px auto;
+		max-width: 600px;
+		padding: 20px;
+		background-color: #fff;
+		border: 1px solid #ccc;
+		border-radius: 5px;
+	}
 	
-function requestPay() {
-    IMP.request_pay({
-        pg: "kakaopay.TC0ONETIME",
-        pay_method: "card",
-        merchant_uid: [[${rvnum}]],
-        name: [[${rv.themaName}+${rv.date}+${rv.time}]],
-        amount:[[${rv.rvPrice}]] ,
-        buyer_email: [[${user.email}]],
-        buyer_name: [[${user.userName}]],
-        buyer_tel: [[${user.phone}]],
-        
-    }, function (rsp) {
-      if (rsp.success) {
-      // 결제 성공 시: 결제 승인 또는 가상계좌 발급에 성공한 경우
-      // jQuery로 HTTP 요청
-      jQuery.ajax({
-        url: "/pay/saveRsp", 
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: JSON.stringify({
-          impUidexe: rsp.imp_uid,            // 결제 고유번호
-          imp_uid: rsp.imp_uid,            // 결제 고유번호
-          merchant_uid: rsp.merchant_uid   // 주문번호
-        })
-      }).done(function (data) {
-        // 가맹점 서버 결제 API 성공시 로직
-        alert("성공")
-        location.href="/reserve/pay/completed"
-      })
-    } else {
-      alert("결제에 실패하였습니다. 에러 내용: " + rsp.error_msg);
-    }
-  });
-    
+	p {
+		text-align: justify;
+		margin-left: 100px;
+		font-size: 18px;
+	}
+	
+	.strong{
+		font-weight: bold;
+		width: 200px;
+	}
+	
+	h1 {
+		font-size: 2.4rem;
+	}
 
-}
-    
-  function requestPay1() {  
-IMP.request_pay({
-    pg : 'kcp.T0000',   //테스트인경우 kcp.T0000
-    pay_method : 'card',
-    merchant_uid: [[${rvnum}]], //상점에서 생성한 고유 주문번호
-    name : [[${rv.themaName}+${rv.date}+${rv.time}]],
-    amount : [[${rv.rvPrice}]],
-    company : '상호명',//해당 파라미터 설정시 통합결제창에 해당 상호명이 노출됩니다.
-    buyer_email : [[${user.email}]],
-    buyer_name : [[${user.userName}]],
-    buyer_tel : [[${user.phone}]],
-    language : 'ko', // en 설정시 영문으로 출력되면 해당 파라미터 생략시 한국어 default
-    auth_mode:'key-in' // 키인결제(일회성 결제)이용시 설정 
-}, function(rsp) { 
-	  if (rsp.success) {
-      // 결제 성공 시: 결제 승인 또는 가상계좌 발급에 성공한 경우
-      // jQuery로 HTTP 요청
-      jQuery.ajax({
-        url: "/pay/saveRsp", 
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: {
-          impUidexe: rsp.imp_uid,            // 결제 고유번호
-          imp_uid: rsp.imp_uid,            // 결제 고유번호
-          merchant_uid: rsp.merchant_uid   // 주문번호
-        }
-      }).done(function (data) {
-        // 가맹점 서버 결제 API 성공시 로직
-      })
-    } else {
-      alert("결제에 실패하였습니다. 에러 내용: " + rsp.error_msg);
-    }
-});
+	button {
+		background-color: #007bff;
+		color: #fff;
+		padding: 10px 15px;
+		font-size: 18px;
+		border: none;
+		border-radius: 5px;
+		cursor: pointer;
+		width: 220px;
+		margin: 0 10px;
+	}
 
-}
+	button:hover {
+		background-color: #0056b3;
+	}
+	
+	.btn2{
+		background-color: #fff;
+		color: #000;
+		padding: 10px 15px;
+		font-size: 18px;
+		border: 1px solid #ccc;
+		border-radius: 5px;
+		cursor: pointer;
+		width: 220px;
+		margin: 0 10px;
+	}
+</style>
+</head>
+<body>
+	<header>
+		<div th:replace="inc/header :: headerMenu"></div>
+	</header>
+    <div class="container">
+        <h1>예약 결제</h1>
+        <p><span class="strong">예약 번호 :</span> [[${rv.rvNum}]]</p>
+        <block th:if="${coupon != null}">
+            <p><span class="strong">할인금액 :</span> [[${coupon.discount}]]</p>
+        </block>
+        <p><span class="strong">예약금 :</span> [[${rv.rvPrice}]]원</p>
+        <button onclick="requestPay()">카카오페이 결제하기</button>
+        <a th:href="@{/main}"><button class="btn2">돌아가기</button></a>
+    </div>
+	
+	
+	<script th:inline="javascript">
+		var IMP = window.IMP;
+		IMP.init("imp38525213");
 
-function send(rsp) {
-    fetch('/pay/saveRsp', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(rsp),
-    })
-    .then(response => response.json())
-    .then(data => {
-        // 서버 응답 처리
-        if (data.success) {
-            // 서버에서 성공적으로 처리된 경우
-            location.href = "/reserve/pay/completed";
-        } else {
-            // 서버에서 실패한 경우
-            
-            alert("서버에서 처리 중 오류가 발생했습니다."+ data.errorMsg);
-           
-        }
-    })
-    .catch(error => {
-        // 오류 처리
-        console.error("POST 요청 중 오류 발생:", error);
-    });
-}
+		function requestPay() {
+			IMP.request_pay({
+				pg: "kakaopay.TC0ONETIME",
+				pay_method: "card",
+				merchant_uid: [[${rvnum}]],
+				name: [[${rv.themaName} + ${rv.date} + ${rv.time}]],
+				amount: [[${rv.rvPrice}]],
+				buyer_email: [[${user.email}]],
+				buyer_name: [[${user.userName}]],
+				buyer_tel: [[${user.phone}]],
+
+			}, function (rsp) {
+				if (rsp.success) {
+					// 결제 성공 시: 결제 승인 또는 가상계좌 발급에 성공한 경우
+					// jQuery로 HTTP 요청
+					jQuery.ajax({
+						url: "/pay/saveRsp",
+						method: "POST",
+						headers: {"Content-Type": "application/json"},
+						data: JSON.stringify({
+							impUidexe: rsp.imp_uid,            // 결제 고유번호
+							imp_uid: rsp.imp_uid,            // 결제 고유번호
+							merchant_uid: rsp.merchant_uid   // 주문번호
+						})
+					}).done(function (data) {
+						// 가맹점 서버 결제 API 성공시 로직
+						alert("예약금 결제완료")
+						location.href = "/reserve/pay/completed"
+					})
+				} else {
+					alert("결제에 실패하였습니다. 에러 내용: " + rsp.error_msg);
+				}
+			});
 
 
+		}
 
-</script>
+		function requestPay1() {
+			IMP.request_pay({
+				pg: 'kcp.T0000',   //테스트인경우 kcp.T0000
+				pay_method: 'card',
+				merchant_uid: [[${rvnum}]], //상점에서 생성한 고유 주문번호
+				name: [[${rv.themaName} + ${rv.date} + ${rv.time}]],
+				amount: [[${rv.rvPrice}]],
+				company: '상호명',//해당 파라미터 설정시 통합결제창에 해당 상호명이 노출됩니다.
+				buyer_email: [[${user.email}]],
+				buyer_name: [[${user.userName}]],
+				buyer_tel: [[${user.phone}]],
+				language: 'ko', // en 설정시 영문으로 출력되면 해당 파라미터 생략시 한국어 default
+				auth_mode: 'key-in' // 키인결제(일회성 결제)이용시 설정 
+			}, function (rsp) {
+				if (rsp.success) {
+					// 결제 성공 시: 결제 승인 또는 가상계좌 발급에 성공한 경우
+					// jQuery로 HTTP 요청
+					jQuery.ajax({
+						url: "/pay/saveRsp",
+						method: "POST",
+						headers: {"Content-Type": "application/json"},
+						data: {
+							impUidexe: rsp.imp_uid,            // 결제 고유번호
+							imp_uid: rsp.imp_uid,            // 결제 고유번호
+							merchant_uid: rsp.merchant_uid   // 주문번호
+						}
+					}).done(function (data) {
+						// 가맹점 서버 결제 API 성공시 로직
+					})
+				} else {
+					alert("결제에 실패하였습니다. 에러 내용: " + rsp.error_msg);
+				}
+			});
 
+		}
 
+		function send(rsp) {
+			fetch('/pay/saveRsp', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(rsp),
+			})
+				.then(response => response.json())
+				.then(data => {
+					// 서버 응답 처리
+					if (data.success) {
+						// 서버에서 성공적으로 처리된 경우
+						location.href = "/reserve/pay/completed";
+					} else {
+						// 서버에서 실패한 경우
+
+						alert("서버에서 처리 중 오류가 발생했습니다." + data.errorMsg);
+
+					}
+				})
+				.catch(error => {
+					// 오류 처리
+					console.error("POST 요청 중 오류 발생:", error);
+				});
+		}
+
+	</script>
 </body>
-
-
-
 
 </html>

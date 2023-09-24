@@ -1,0 +1,46 @@
+@charset "UTF-8";
+
+.container {
+	margin: 20px auto;
+}
+
+h1 {
+	font-size: 3rem;
+	margin: 50px;
+	font-weight: 600;
+	line-height: 1.15;
+	text-align: center;
+	padding-bottom: 20px;
+	border-bottom: 4px solid #ccc;
+}
+
+table {
+	margin: 30px auto;
+	width: 100%;
+	border: 2px solid #ccc;
+	border-collapse: collapse;
+}
+
+th,
+td {
+	border-collapse: collapse;
+	border: 2px solid #ccc;
+	padding: 10px;
+}
+
+th {
+	background-color: #f2f2f2;
+}
+
+td {
+	background-color: #fff;
+}
+
+.page{
+	text-align: center;
+}
+
+.page button{
+	padding: 10px;
+	margin: 0 10px;
+}

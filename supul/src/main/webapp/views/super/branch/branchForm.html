@@ -8,7 +8,7 @@
 		content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
 	<title>Branch 등록</title>
 	<link th:href="@{/css/headfoot.css}" rel="stylesheet" type="text/css">
-
+	<link th:href="@{/css/kjh/branchForm.css}" rel="stylesheet" type="text/css">
 </head>
 
 <body>
@@ -23,23 +23,25 @@
 			<div th:replace="~{inc/header :: headerMenu}"></div>
 		</block>
 	</header>
-	<h1>지점 등록</h1>
-	<form th:action="@{/super/branch/reg}" method="post" th:object="${branch}">
-		<input type="hidden" th:field="*{branchId}" />
-		<label for="name">지점명:</label>
-		<input type="text" id="name" name="name" th:field="*{name}" /><br />
-		<label for="address">주소:</label>
-		<input type="text" id="address" name="address" th:field="*{address}" /><br />
-		<label for="phone">전화번호:</label>
-		<input type="text" id="phone" name="phone" th:field="*{phone}" /><br />
-		<label for="coordinate">좌표:</label>
-		<input type="text" id="coordinate" name="coordinate" th:field="*{coordinate}" /><br />
-
-
-		<button type="submit">등록</button>
-	</form>
-	<a th:href="@{/super/branchList}">지점 목록으로 돌아가기</a>
-
+	<div class="container">
+		<h1>지점 등록</h1>
+		<form th:action="@{/super/branch/reg}" method="post" th:object="${branch}">
+			<input type="hidden" th:field="*{branchId}" />
+			<label for="name">지점명:</label>
+			<input type="text" id="name" name="name" th:field="*{name}" /><br />
+			<label for="address">주소:</label>
+			<input type="text" id="address" name="address" th:field="*{address}" /><br />
+			<label for="phone">전화번호:</label>
+			<input type="text" id="phone" name="phone" th:field="*{phone}" /><br />
+			<label for="coordinate">좌표:</label>
+			<input type="text" id="coordinate" name="coordinate" th:field="*{coordinate}" /><br />
+			<div class="button">
+				<button type="submit">등록</button>
+				<a th:href="@{/super/branchList}"><button type="button">지점 목록으로</button></a>
+			</div>
+		</form>
+		
+	</div>
 </body>
 
 </html>

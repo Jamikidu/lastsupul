@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>공지사항 게시글 작성</title>
+    <link th:href="@{/css/headfoot.css}" rel="stylesheet" type="text/css">
+
+</head>
+<body>
+	   <header>
+      		<block th:if="${userRole!=null}">
+			<div th:replace="~{inc/superHeader :: headerMenu}"></div>
+		</block>
+		<block th:unless="${userRole!=null}">
+			<div th:replace="~{inc/adminHeader :: headerMenu}"></div>
+		</block>
+   
+   </header>
+    <h1>공지사항 게시글 작성</h1>
+    <form th:action="@{/board/notice/write}" method="post" enctype="multipart/form-data">
+    <table border="" >
+        <tr>
+		    <td>카테고리</td>
+		    <td>
+		        <select id="cate" name="category">
+		            <option value="전체공지">전체공지</option>
+		            <option value="매장공지">매장공지</option>  
+		        </select>
+		    </td>
+		</tr>
+        <tr>
+		    <td>작성자</td>
+		    <td>
+				<block th:if="${admin != null && userRole==null}">
+				<input type="text" th:value="${admin.name}" th:name="name" />
+				<input type="hidden" th:value="${admin.no}" name="no"/>
+		        </block>
+		        <block th:if="${userRole!=null}">
+					<input type="text" th:value="총괄" th:name="name" />
+				<input type="hidden" th:value="6" name="no"/>
+				</block>
+		    </td>
+		</tr>
+		<tr>
+			<td>매장</td>
+			<td>
+				<block th:if="${admin != null && userRole==null}">
+			    <input id="branchId" name="branchName" th:value="${admin.branchName}"   >
+				 </block>
+				 <block th:if="${userRole!=null}">
+				<input id="branchId" name="branchName" th:value="총괄"   >
+				</block>
+				 
+				</input>
+			</td>
+		</tr>
+        <tr>
+            <td>파일</td>
+            <td><input type="file" id="file" name="file" accept="image/*"></td>
+        </tr>
+        <tr>
+            <td>제목</td>
+            <td><input type="text" id="title" name="title"></td>
+        </tr>
+        <tr>
+            <td>내용</td>
+            <td><textarea id="content" name="content" ></textarea></td>
+        </tr>
+        <tr>
+            <td colspan="2" align="right">
+                <button type="submit">작성</button>
+                <a th:href="@{/board/notice/list}"><button value="목록">목록</button></a>
+            </td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

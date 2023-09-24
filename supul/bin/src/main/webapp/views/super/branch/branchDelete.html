@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport"
+		content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+	<title>Branch 삭제</title>
+	<link th:href="@{/css/headfoot.css}" rel="stylesheet" type="text/css">
+
+</head>
+
+<body>
+	<header>
+		<block th:if="${super!=null}">
+			<div th:replace="~{inc/superHeader :: headerMenu}"></div>
+		</block>
+		<block th:unless="${super!=null}">
+			<div th:replace="~{inc/adminHeader :: headerMenu}"></div>
+		</block>
+	</header>
+	<h1>지점 삭제</h1>
+	<p>정말로 삭제하시겠습니까?</p>
+	<form th:action="@{/super/branch/delete}" method="post" th:object="${branch}">
+		<input type="hidden" th:field="*{branchId}" />
+		<button type="button" onclick="return alert('예약내역이 있어 삭제할수없습니다.')">삭제</button>
+	</form>
+	<a th:href="@{/super/branchList}">지점 목록으로 돌아가기</a>
+</body>
+
+</html>

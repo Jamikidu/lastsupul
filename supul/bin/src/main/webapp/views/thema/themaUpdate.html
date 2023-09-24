@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+   <meta charset="UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+   <title>테마 수정</title>
+   <link th:href="@{/css/headfoot.css}" rel="stylesheet" type="text/css">
+
+   <script>
+      function fileDelete() {
+         frm.action = "/thema/fileDelete/" + [[${themaId}]]
+         frm.submit()
+
+      }
+   </script>
+</head>
+
+<body>
+   <header>
+         <block th:if="${userRole!=null}">
+         <div th:replace="~{inc/superHeader :: headerMenu}"></div>
+      </block>
+      <block th:unless="${userRole!=null}">
+         <div th:replace="~{inc/adminHeader :: headerMenu}"></div>
+      </block>
+   </header>
+   <h1>테마 수정</h1>
+   <form name="frm" th:action="@{/thema/update}" method="post" enctype="multipart/form-data" th:object="${thema}">
+      <input type="hidden" th:field="*{themaId}" />
+      <input type="hidden" th:field="*{branch}" />
+      <table border="">
+         <tr>
+            <td>지점ID</td>
+            <td>
+               <select name="branchId" id="branchId" disabled>
+                  <option value="">-- 선택하세요 --</option>
+                  <option th:each="br: ${branchList}" th:value="${br.branchId}" th:text="${br.name}"
+                     th:selected="${br.branchId == thema.branch.branchId }"></option>
+               </select>
+            </td>
+         </tr>
+         <block th:if="${userRole!=null}"> 
+         <tr>
+            <td>Title</td>
+            <td><input type="text" th:field="*{title}" required="required" /></td>
+         </tr>
+         <tr>
+            <td>Content</td>
+            <td><input type="text" th:field="*{content}" /></td>
+         </tr>
+         <tr>
+            <td>Poster</td>
+            <td>
+               <th:block th:if="${thema.poster != null}">
+
+                  <input type="text" th:field="*{poster}"  />
+                 
+                     <input type="button" onclick="fileDelete()" value="파일삭제" />
+                  
+               </th:block>
+               <input th:unless="${thema.poster != null}" type="file" th:field="*{mmff}" />
+            </td>
+         </tr>
+         <tr>
+            <td>Type</td>
+            <td><input type="text" th:field="*{type}" /></td>
+         </tr>
+         <tr>
+            <td>Price</td>
+            <td><input type="text" th:field="*{price}" required="required" /></td>
+         </tr>
+         <tr>
+            <td>People</td>
+            <td><input type="text" th:field="*{people}" /></td>
+         </tr>
+         <tr>
+            <td>Level</td>
+            <td><input type="text" th:field="*{level}" /></td>
+         </tr>
+         <tr>
+            <td>PlayTime</td>
+            <td><input type="text" th:field="*{playTime}" /></td>
+         </tr>
+         <tr>
+            <td>Horror</td>
+            <td><input type="text" th:field="*{horror}" /></td>
+         </tr>
+         <tr>
+            <td>Activity</td>
+            <td><input type="text" th:field="*{activity}" /></td>
+         </tr> 
+         </block>
+        <!-- //=====================================================//-->
+          <block th:unless="${userRole!=null}"> 
+         <tr>
+            <td>Title</td>
+            <td><input type="text" th:field="*{title}" required="required" readonly/></td>
+         </tr>
+         <tr>
+            <td>Content</td>
+            <td><input type="text" th:field="*{content}" readonly/></td>
+         </tr>
+         <tr>
+            <td>Poster</td>
+            <td>
+               <th:block th:if="${thema.poster != null}">
+
+                  <input type="text" th:field="*{poster}" readonly />
+                 
+                     <input type="button" onclick="fileDelete()" value="파일삭제" />
+                  
+               </th:block>
+               <input th:unless="${thema.poster != null}" type="file" th:field="*{mmff}" readonly/>
+            </td>
+         </tr>
+         <tr>
+            <td>Type</td>
+            <td><input type="text" th:field="*{type}" readonly/></td>
+         </tr>
+         <tr>
+            <td>Price</td>
+            <td><input type="text" th:field="*{price}" required="required" readonly/></td>
+         </tr>
+         <tr>
+            <td>People</td>
+            <td><input type="text" th:field="*{people}" readonly/></td>
+         </tr>
+         <tr>
+            <td>Level</td>
+            <td><input type="text" th:field="*{level}" readonly/></td>
+         </tr>
+         <tr>
+            <td>PlayTime</td>
+            <td><input type="text" th:field="*{playTime}" readonly/></td>
+         </tr>
+         <tr>
+            <td>Horror</td>
+            <td><input type="text" th:field="*{horror}" readonly/></td>
+         </tr>
+         <tr>
+            <td>Activity</td>
+            <td><input type="text" th:field="*{activity}" readonly/></td>
+         </tr> 
+         </block>
+         
+         
+         <tr>
+            <td>예약가능시간</td>
+            <td>
+               <div id="timeContainer">
+
+
+
+                  <input th:each="time: ${thema.timetable}" type="time" th:name="time" th:value="${time}"
+                     required="required" />
+
+
+               </div>
+            </td>
+         </tr>
+         <tr>
+            <td></td>
+            <td>
+               <button type="button" onclick="addTimeField()">추가</button>
+               <button type="button" onclick="removeLastTimeField()">삭제</button>
+            </td>
+         </tr>
+         
+         <tr>
+            <td colspan="2" align="center">
+            <button type="submit">수정</button>
+            <a th:href="@{/thema/themaList}">목록으로</a>
+            </td>
+         </tr>
+
+      </table>
+   </form>
+   <block th:if="${userRole==null}">
+   <a th:href="@{/admin}">관리자메인으로</a>
+   </block>
+   
+   <block th:unless="${userRole==null}">
+      
+   <a th:href="@{/super}">총괄메인으로</a>
+   </block>
+   
+   <script th:inline="javascript">
+      /* 시간 입력 필드 추가 함수 */
+      function addTimeField() {
+         var newInput = document.createElement("input");
+         newInput.type = "time";
+         newInput.name = "time"; // name 속성을 추가하여 값을 서버로 전송할 수 있도록 함
+         var container = document.getElementById("timeContainer");
+         container.appendChild(newInput);
+      }
+
+      /* 시간 입력 필드 삭제 함수 */
+      function removeLastTimeField() {
+         var container = document.getElementById("timeContainer");
+         var timeInputs = container.querySelectorAll('input[type="time"]');
+         if (timeInputs.length > 1) { // 최소 1개의 시간 입력 필드를 유지하기 위해 체크
+            container.removeChild(timeInputs[timeInputs.length - 1]);
+         }
+      }
+
+
+
+   </script>
+</body>
+
+</html>

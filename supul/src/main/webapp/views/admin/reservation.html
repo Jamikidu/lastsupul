@@ -3,9 +3,9 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>Reservation List</title>
+	<title>예약 내역</title>
 	<link th:href="@{/css/headfoot.css}" rel="stylesheet" type="text/css">
-
+	<link th:href="@{/css/kjh/reservation.css}" rel="stylesheet" type="text/css">
 </head>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script th:inline="javascript">
@@ -25,23 +25,18 @@
 	<header>
 		<div th:replace="~{inc/adminHeader :: headerMenu}"></div>
 	</header>
-
-
-
 	<h1>예약 내역</h1>
 
 	<block th:if="${userRole !=null}">
 
 		<select id="branchName" name="branchName">
 			<option th:value="전체" th:text="전체"></option>
-
 			<option th:each="branch : ${branchList}" th:value="${branch.name}" th:text="${branch.name}"
 				th:selected="${branch.name == #vars.branchName}">
 			</option>
-
 		</select>
 	</block>
-	<table border="">
+	<table>
 		<tr>
 			<th>번호</th>
 			<th><button onclick="toggleSortDirection('rvId')">id</button></th>
@@ -52,18 +47,13 @@
 			<th><button onclick="toggleSortDirection('themaName')">테마명</button></th>
 			<th>예약시간</th>
 			<th>지점</th>
-
 			<th><button onclick="toggleSortDirection('noShow')">노쇼확인</button></th>
 			<th><button onclick="toggleSortDirection('paid')">결제확인</button></th>
 			<th>랭킹등록</th>
 			<th><button onclick="toggleSortDirection('cancle')">취소여부</button></th>
-
-
 		</tr>
-
-
 		<tr th:each="rv, num : ${searchList}">
-
+		
 			<td th:text="${searchList.number*searchList.size+num.count}"></td>
 			<td th:text="${rv.rvId}"></td>
 			<td th:text="${rv.date}"> </td>
@@ -73,71 +63,63 @@
 			<td th:text="${rv.time}"> </td>
 			<td th:text="${rv.branch.name}"> </td>
 			<block th:each="a : ${rv.thema}">
-<block th:if="${!rv.cancle}">
-				<td>
-
-					<block th:if="${rv.paid ==True}"></block>
-					<block th:unless="${rv.paid ==True}">
-						<block th:if="${rv.noShow ==false}">
-							<form
-								th:action="|/admin/rvList/${rv.branch.name}/${rv.rvId}/updateNoShow?page=${searchList.number}|"
-								method="post">
-								<input type="hidden" name="rvId" th:value="${rv.rvId}" />
-								<button type="submit">노쇼</button>
-							</form>
-						</block>
-						<block th:unless="${rv.noShow ==false}">
-							<form
-								th:action="|/admin/rvList/${rv.branch.name}/${rv.rvId}/updateNoShow?page=${searchList.number}|"
-								method="post">
-								<input type="hidden" name="rvId" th:value="${rv.rvId}" />
-								<button type="submit">노쇼취소</button>
-							</form>
-						</block>
-					</block>
-				</td>
-
-				<td>
-			
-					<block th:unless="${rv.noShow ==True}">
-						<block th:if="${rv.paid ==false}">
-							
-							<form
-								th:action="|/admin/rvList/${rv.branch.name}/${rv.rvId}/alert?page=${searchList.number}|"
-								method="post">
-								<input type="hidden" name="rvId" th:value="${rv.rvId}" />
-								<button type="submit">결제</button>
-							</form>
-							
-						
-							
-						
-						</block>
-						<block th:unless="${rv.paid ==false}">
-							<block th:if="${rv.date > tomorrow}">
+				<block th:if="${!rv.cancle}">
+					<td>
+						<block th:if="${rv.paid ==True}"></block>
+						<block th:unless="${rv.paid ==True}">
+							<block th:if="${rv.noShow ==false}">
 								<form
-									th:action="|/admin/rvList/${rv.branch.name}/${rv.rvId}/alert2?page=${searchList.number}|"
+									th:action="|/admin/rvList/${rv.branch.name}/${rv.rvId}/updateNoShow?page=${searchList.number}|"
 									method="post">
 									<input type="hidden" name="rvId" th:value="${rv.rvId}" />
-									<button type="submit">결제취소</button>
+									<button type="submit">노쇼</button>
 								</form>
 							</block>
-							<block th:if="${rv.date < tomorrow}">
-
-								<button type="submit">결제취소불가</button>
-
+							<block th:unless="${rv.noShow ==false}">
+								<form
+									th:action="|/admin/rvList/${rv.branch.name}/${rv.rvId}/updateNoShow?page=${searchList.number}|"
+									method="post">
+									<input type="hidden" name="rvId" th:value="${rv.rvId}" />
+									<button type="submit">노쇼취소</button>
+								</form>
 							</block>
 						</block>
-
-					
-				</td>
-</block> <block><td></td> <td></td></block>
+					</td>
+					<td>
+						<block th:unless="${rv.noShow ==True}">
+							<block th:if="${rv.paid ==false}">
+		
+								<form th:action="|/admin/rvList/${rv.branch.name}/${rv.rvId}/alert?page=${searchList.number}|"
+									method="post">
+									<input type="hidden" name="rvId" th:value="${rv.rvId}" />
+									<button type="submit">결제</button>
+								</form>
+		
+							</block>
+							<block th:unless="${rv.paid ==false}">
+								<block th:if="${rv.date > tomorrow}">
+									<form
+										th:action="|/admin/rvList/${rv.branch.name}/${rv.rvId}/alert2?page=${searchList.number}|"
+										method="post">
+										<input type="hidden" name="rvId" th:value="${rv.rvId}" />
+										<button type="submit">결제취소</button>
+									</form>
+								</block>
+								<block th:if="${rv.date < tomorrow}">
+		
+									<button type="submit">결제취소불가</button>
+		
+								</block>
+							</block>
+						</block>
+					</td>
+				</block>
 				<block th:if="${rv.pay ==null }">
 					<block th:if="${rv.noShow==false}">
-						<td>준비 </td>
+						<td>준비</td>
 					</block>
 					<block th:if="${rv.noShow==true}">
-						<td>블랙 </td>
+						<td>블랙</td>
 					</block>
 				</block>
 				<block th:unless="${rv.pay ==null }">
@@ -145,21 +127,16 @@
 						<td><a th:href="|/admin/rank/insert?rvId=${rv.rvId}&page=${searchList.number}|">랭킹등록</a> </td>
 					</block>
 					<block th:if="${rv.pay.rank != null} ">
-
 						<td><a th:href="|/admin/rankList/${rv.branch.name}/전체|">랭킹확인</a> </td>
 					</block>
-
 				</block>
-
-			</block>
 			</block>
 			<td th:text="${rv.cancle}? 취소 : ''"> </td>
 			<!-- 기타 필드 추가 -->
 		</tr>
-
 	</table>
 	<!-- 페이지처리 -->
-	<div th:if="${searchList.totalPages > 1}">
+	<div class="page" th:if="${searchList.totalPages > 1}">
 		<tr class="pagination">
 			<td th:if="${searchList.hasPrevious}" class="page-item">
 				<a th:href="|/admin/rvList/${branchName}?page=0&userName=${userName}&sortBy=${sortBy}|"
@@ -169,16 +146,11 @@
 				<a th:href="|/admin/rvList/${branchName}?page=${searchList.number - 1}&userName=${userName}&sortBy=${sortBy}|"
 					class="page-link">이전</a>
 			</td>
-
-
 			<td th:each="page : ${#numbers.sequence(searchList.number-4 <= 0 ? 0 :  searchList.number-4, (searchList.number+4) < (searchList.totalPages)?   searchList.number+4 :searchList.totalPages-1 )}"
 				class="page-item" th:classappend="${searchList.number == page} ? 'active'">
 				<a th:href="|/admin/rvList/${branchName}?page=${page}&userName=${userName}&sortBy=${sortBy}|"
 					class="page-link" th:text="${page + 1}"></a>
 			</td>
-
-
-
 			<td th:if="${searchList.hasNext}" class="page-item">
 				<a th:href="|/admin/rvList/${branchName}?page=${searchList.number + 1}&userName=${userName}&sortBy=${sortBy}|"
 					class="page-link">다음</a>
@@ -189,88 +161,72 @@
 			</td>
 		</tr>
 	</div>
-	<form action="" method="GET">
+	<form action="" method="GET" class="search">
 		<!-- 사용자 이름 입력 -->
-		<label for="userName">User Name:</label>
+		<label for="userName">유저이름 </label>
 		<input type="text" id="userName" name="userName">
 		<button type="submit">검색</button>
-		<br>
+	</form>
+	<br>
+	<table class="black">
+		<tr>
+			<td colspan="11">
+				<h1>블랙리스트</h1>
+			</td>
+		</tr>
+		<tr>
+			<th>번호</th>
+			<th><a th:href="|/admin/rvList/${branchName}?page=${searchList.number}&userName=${userName}&sortBy=rvId|"><button>Id</button></a>
+			</th>
+			<th><a th:href="|/admin/rvList/${branchName}?page=${searchList.number}&userName=${userName}&sortBy=date|"><button>date</button></a>
+			</th>
+			<th><a th:href="|/admin/rvList/${branchName}?page=${searchList.number}&userName=${userName}&sortBy=price|"><button>price</button></a>
+			</th>
+			<th><a th:href="|/admin/rvList/${branchName}?page=${searchList.number}&userName=${userName}&sortBy=userName|"><button>userName</button></a>
+			</th>
+			<th><a th:href="|/admin/rvList/${branchName}?page=${searchList.number}&userName=${userName}&sortBy=themaName|"><button>themaName</button></a>
+			</th>
+			<th>예약시간</th>
+			<th>지점</th>
+			<th><a th:href="|/admin/rvList/${branchName}?page=${searchList.number}&userName=${userName}&sortBy=noShow|"><button>노쇼확인</button></a>
+			</th>
+			<th>결제확인</th>
+			<th>랭킹등록</th>
+	
+		</tr>
+	
+		<tr th:each="rv, num : ${searchList}" style="color: red; font-weight: bold;">
+			<block th:if="${rv.noShow == true}">
+				<td th:text="${searchList.number*searchList.size+num.count}"></td>
+				<td th:text="${rv.rvId}"></td>
+				<td th:text="${rv.date}"> </td>
+				<td th:text="${rv.price}"> </td>
+				<td th:text="${rv.userName}"> </td>
+				<td th:text="${rv.themaName}"> </td>
+				<td th:text="${rv.time}"> </td>
+				<td th:text="${rv.branch.name}"> </td>
+			</block>
+		</tr>
+	</table>
+	
+	<script th:inline="javascript">
+        var currentSortDirection = [[${sortDirection}]]; // 초기 정렬 방향 (오름차순)
 
+        function toggleSortDirection(sortBy) {
+            if (currentSortDirection === 'ASC') {
+                currentSortDirection = 'DESC'; // 내림차순으로 변경
+            } else {
+                currentSortDirection = 'ASC'; // 오름차순으로 변경
+            }
 
-
-		<table border="">
-			<tr>
-				<td>
-					<h1>블랙리스트</h1>
-				</td>
-			</tr>
-			<tr>
-				<th>번호</th>
-				<th><a
-						th:href="|/admin/rvList/${branchName}?page=${searchList.number}&userName=${userName}&sortBy=rvId|">Id</a>
-				</th>
-				<th><a
-						th:href="|/admin/rvList/${branchName}?page=${searchList.number}&userName=${userName}&sortBy=date|">date</a>
-				</th>
-				<th><a
-						th:href="|/admin/rvList/${branchName}?page=${searchList.number}&userName=${userName}&sortBy=price|">price</a>
-				</th>
-				<th><a
-						th:href="|/admin/rvList/${branchName}?page=${searchList.number}&userName=${userName}&sortBy=userName|">userName</a>
-				</th>
-				<th><a
-						th:href="|/admin/rvList/${branchName}?page=${searchList.number}&userName=${userName}&sortBy=themaName|">themaName</a>
-				</th>
-				<th>예약시간</th>
-				<th>지점</th>
-
-				<th><a
-						th:href="|/admin/rvList/${branchName}?page=${searchList.number}&userName=${userName}&sortBy=noShow|">노쇼확인</a>
-				</th>
-				<th>결제확인</th>
-				<th>랭킹등록</th>
-
-
-			</tr>
-
-
-			<tr th:each="rv, num : ${searchList}">
-				<block th:if="${rv.noShow == true}">
-					<td th:text="${searchList.number*searchList.size+num.count}"></td>
-					<td th:text="${rv.rvId}"></td>
-					<td th:text="${rv.date}"> </td>
-					<td th:text="${rv.price}"> </td>
-					<td th:text="${rv.userName}"> </td>
-					<td th:text="${rv.themaName}"> </td>
-					<td th:text="${rv.time}"> </td>
-					<td th:text="${rv.branch.name}"> </td>
-				</block>
-
-
-				<!-- 기타 필드 추가 -->
-			</tr>
-
-		</table>
-
-		<script th:inline="javascript">
-			var currentSortDirection = [[${sortDirection}]]; // 초기 정렬 방향 (오름차순)
-
-			function toggleSortDirection(sortBy) {
-				if (currentSortDirection === 'ASC') {
-					currentSortDirection = 'DESC'; // 내림차순으로 변경
-				} else {
-					currentSortDirection = 'ASC'; // 오름차순으로 변경
-				}
-
-				// 정렬 방향과 정렬 기준을 사용하여 URL을 생성하고 페이지를 이동
-				var url = '/admin/rvList/' + [[${branchName}]] +
-
-					'?userName=' + [[${userName}]] +
-					'&sortBy=' + sortBy +
-					'&sortDirection=' + currentSortDirection;
-				window.location.href = url;
-			}
-		</script>
+            // 정렬 방향과 정렬 기준을 사용하여 URL을 생성하고 페이지를 이동
+            var url = '/admin/rvList/' + [[${branchName}]] +
+                '?userName=' + [[${userName}]] +
+                '&sortBy=' + sortBy +
+                '&sortDirection=' + currentSortDirection;
+            window.location.href = url;
+        }
+    </script>
 </body>
 
 </html>

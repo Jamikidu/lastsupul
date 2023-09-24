@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>쿠폰수정</title>
+<link th:href="@{/css/headfoot.css}" rel="stylesheet" type="text/css">
+</head>
+<body>
+	<header>
+		<div th:replace="~{inc/superHeader :: headerMenu}"></div>
+	</header>
+<form action="" method="post">
+	<table border="">
+		<tr>
+			<td>쿠폰이름</td>
+			<td><input type="text" name="couponName" th:value="${coupon.couponName}" / ></td>
+		</tr>
+		<tr>
+			<td>할인되는금액</td>
+			<td><input type="text" name="discount" th:value="${coupon.discount}" / ></td>
+		</tr>
+		<tr>
+			<td colspan="2" align="right">
+				<button type="submit" value="수정">수정</button>
+				<a href="/super/couponManage"><button type="button" value="뒤로">뒤로</button></a>
+			</td>
+		</tr>
+	</table>
+</form>
+</body>
+</html>

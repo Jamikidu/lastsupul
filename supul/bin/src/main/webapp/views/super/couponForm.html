@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>쿠폰등록</title>
+<link th:href="@{/css/headfoot.css}" rel="stylesheet" type="text/css">
+</head>
+<body>
+	<header>
+		<div th:replace="~{inc/superHeader :: headerMenu}"></div>
+	</header>
+	<div>
+		<form action="" method="post">
+			<table border="">
+				<tr>
+					<td>쿠폰이름:</td>
+					<td>
+						<input type="text" name="couponName" />
+					</td>
+				</tr>
+				<tr>
+					<td>할인가격:</td>
+					<td>
+						<input type="text" name="discount" />
+					</td>
+				</tr>
+				<tr>
+					<td>제공할 유저ID:</td>
+					<td>
+						<input type="text" name="userId" />
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2" align="right">
+						<button type="submit" value="발급">발급</button>
+						<a href="/super/couponManage"><button type="button" value="뒤로">뒤로</button></a>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+
+</body>
+</html>
